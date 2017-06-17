@@ -1,5 +1,8 @@
 #include "Host.hpp"
 
+/**
+ * The server implementation.
+ */
 class Server : public Host {
 public:
         Server(int port)
@@ -8,6 +11,9 @@ public:
         }
 };
 
+/**
+ * The client implementation
+ */
 class Client : public Host {
 private:
         ENetPeer* server;
@@ -18,6 +24,11 @@ public:
         {
         }
 
+        /**
+         * Connect to a remote ENetHost on ip:port.
+         *
+         * @return true if successful, false otherwise
+         */
         bool connect(const std::string& ip, int port)
         {
                 ENetAddress address;
@@ -34,6 +45,11 @@ public:
                 return true;
         }
 
+        /**
+         * Send string data to a connected ENetPeer.
+         *
+         * @return true if successful, false otherwise
+         */
         bool send(const std::string& data)
         {
                 ENetPacket* packet = enet_packet_create(data.c_str(),
@@ -47,6 +63,11 @@ public:
                 return true;
         }
 
+        /**
+         * Disconnect from a connected ENetPeer.
+         *
+         * @return true if successful, false otherwise
+         */
         bool disconnect()
         {
                 enet_peer_disconnect(server, server->connectID);

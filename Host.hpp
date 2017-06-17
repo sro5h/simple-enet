@@ -5,6 +5,9 @@
 
 std::string convertAddress(const ENetAddress& address);
 
+/**
+ * Holds all the relevant ENetEvent data.
+ */
 struct Event {
         enum EventType
         {
@@ -20,10 +23,17 @@ struct Event {
         unsigned int port;
 };
 
+/**
+ * Base class for both clients and servers.
+ */
 class Host {
 protected:
         ENetHost* host;
 
+        /**
+         * Gets called after an ENetPeer connects or a connection attempt was
+         * successful.
+         */
         void onConnect(const ENetEvent& enetEvent, Event& event)
         {
                 event.type = Event::CONNECTED;
@@ -37,6 +47,10 @@ protected:
                 event.port = enetEvent.peer->address.port;
         }
 
+        /**
+         * Gets called if an ENetPacket is received and converts the data to a
+         * std::string.
+         */
         void onReceive(const ENetEvent& enetEvent, Event& event)
         {
                 event.type = Event::RECEIVED;
@@ -50,6 +64,10 @@ protected:
                 enet_packet_destroy(enetEvent.packet);
         }
 
+        /**
+         * Gets called after an ENetPeer disconnects or a disconnection attempt
+         * was successful.
+         */
         void onDisconnect(const ENetEvent& enetEvent, Event& event)
         {
                 event.type = Event::DISCONNECTED;
@@ -59,6 +77,10 @@ protected:
         }
 
 public:
+        /**
+         * Creates an ENetHost on the specified port or if port equals PORT_ANY
+         * on a availlable port.
+         */
         Host(int port)
         {
                 if (port == PORT_ANY) {
@@ -77,11 +99,20 @@ public:
                 }
         }
 
+        /**
+         * Destroys the ENetHost.
+         */
         ~Host()
         {
                 enet_host_destroy(host);
         }
 
+        /**
+         * Update the ENetHost and convert pending ENetEvents to the Event
+         * struct.
+         *
+         * @return false if no ENetEvents was availlable, true otherwise
+         */
         bool pollEvent(Event& event)
         {
                 ENetEvent enetEvent;
@@ -104,6 +135,9 @@ public:
         }
 };
 
+/**
+ * Convert ENetAddress::host to a std::string.
+ */
 std::string convertAddress(const ENetAddress& address)
 {
         char buffer[32];
