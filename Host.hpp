@@ -8,9 +8,9 @@ std::string convertAddress(const ENetAddress& address);
 struct Event {
         enum EventType
         {
-                Connected,
-                Received,
-                Disconnected
+                CONNECTED,
+                RECEIVED,
+                DISCONNECTED
         };
 
         EventType type;
@@ -26,7 +26,7 @@ protected:
 
         void onConnect(const ENetEvent& enetEvent, Event& event)
         {
-                event.type = Event::Connected;
+                event.type = Event::CONNECTED;
 
                 /* Store the connectID in ENetPeer::data */
                 int* id = new int(enetEvent.peer->connectID);
@@ -39,7 +39,7 @@ protected:
 
         void onReceive(const ENetEvent& enetEvent, Event& event)
         {
-                event.type = Event::Received;
+                event.type = Event::RECEIVED;
                 event.peerId = enetEvent.peer->connectID;
 
                 /* Convert the sent data to a std::string */
@@ -52,7 +52,7 @@ protected:
 
         void onDisconnect(const ENetEvent& enetEvent, Event& event)
         {
-                event.type = Event::Disconnected;
+                event.type = Event::DISCONNECTED;
                 event.peerId = *(int*) enetEvent.peer->data;
 
                 /* TODO: Free data if the peer disconnects */
