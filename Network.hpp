@@ -7,11 +7,15 @@
 #define EVENT_TYPE_RECEIVE 1
 #define EVENT_TYPE_DISCONNECT 2
 
+std::string convertAddress(const ENetAddress& address);
+
 struct Event
 {
         int type;
         unsigned int peerId;
         std::string data;
+        std::string ip;
+        unsigned int port;
 };
 
 class Server
@@ -23,7 +27,11 @@ private:
         {
                 if(enetEvent.type == ENET_EVENT_TYPE_CONNECT) {
                         event.type = EVENT_TYPE_CONNECT;
-                        event.peerId = enetEvent.peer->connectID;
+                        int* id = new int(enetEvent.peer->connectID);
+                        enetEvent.peer->data = id;
+                        event.peerId = *id;
+                        event.ip = convertAddress(enetEvent.peer->address);
+                        event.port = enetEvent.peer->address.port;
 
                 } else if(enetEvent.type == ENET_EVENT_TYPE_RECEIVE) {
                         event.type = EVENT_TYPE_RECEIVE;
@@ -37,7 +45,9 @@ private:
 
                 } else if(enetEvent.type == ENET_EVENT_TYPE_DISCONNECT) {
                         event.type = EVENT_TYPE_DISCONNECT;
-                        event.peerId = enetEvent.data;
+                        event.peerId = *(int*)enetEvent.peer->data;
+
+                        /* TODO: Free data if the peer disconnects */
                 }
         }
 
@@ -84,7 +94,11 @@ private:
         {
                 if(enetEvent.type == ENET_EVENT_TYPE_CONNECT) {
                         event.type = EVENT_TYPE_CONNECT;
-                        event.peerId = enetEvent.peer->connectID;
+                        int* id = new int(enetEvent.peer->connectID);
+                        enetEvent.peer->data = id;
+                        event.peerId = *id;
+                        event.ip = convertAddress(enetEvent.peer->address);
+                        event.port = enetEvent.peer->address.port;
 
                 } else if(enetEvent.type == ENET_EVENT_TYPE_RECEIVE) {
                         event.type = EVENT_TYPE_RECEIVE;
@@ -98,7 +112,9 @@ private:
 
                 } else if(enetEvent.type == ENET_EVENT_TYPE_DISCONNECT) {
                         event.type = EVENT_TYPE_DISCONNECT;
-                        event.peerId = enetEvent.peer->connectID;
+                        event.peerId = *(int*)enetEvent.peer->data;
+
+                        /* TODO: Free data if the peer disconnects */
                 }
         }
 
@@ -166,3 +182,15 @@ public:
                 enet_host_flush(host);
         }
 };
+
+std::string convertAddress(const ENetAddress& address)
+{
+        char buffer[32];
+        std::string str = "";
+
+        if(enet_address_get_host_ip(&address, buffer, 32) == 0) {
+                str = buffer;
+        }
+
+        return str;
+}

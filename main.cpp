@@ -21,7 +21,8 @@ int main(int argc, char** argv)
                         while(server.pollEvent(event)) {
                                 if(event.type == EVENT_TYPE_CONNECT) {
                                         std::cout << "New client[id=" << event.peerId <<
-                                                "] connected." <<  std::endl;
+                                                "] connected from [" << event.ip <<
+                                                ":" << event.port << "]." <<  std::endl;
                                 } else if(event.type == EVENT_TYPE_RECEIVE) {
                                         std::cout << "Received[id=" << event.peerId <<
                                                 "]: " << event.data << std::endl;
