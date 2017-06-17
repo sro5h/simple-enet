@@ -1,0 +1,7 @@
+# premake5 files
+Makefile
+*.make
+
+# Binary files
+obj/
+app
