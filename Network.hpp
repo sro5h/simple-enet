@@ -1,136 +1,25 @@
-#include <enet/enet.h>
-#include <sstream>
+#include "Host.hpp"
 #include <iostream>
 
-#define EVENT_TYPE_NONE -1
-#define EVENT_TYPE_CONNECT 0
-#define EVENT_TYPE_RECEIVE 1
-#define EVENT_TYPE_DISCONNECT 2
 
-std::string convertAddress(const ENetAddress& address);
-
-struct Event
+class Server : public Host
 {
-        int type;
-        unsigned int peerId;
-        std::string data;
-        std::string ip;
-        unsigned int port;
-};
-
-class Server
-{
-private:
-        ENetHost* host;
-
-        void handleEvent(const ENetEvent& enetEvent, Event& event)
-        {
-                if(enetEvent.type == ENET_EVENT_TYPE_CONNECT) {
-                        event.type = EVENT_TYPE_CONNECT;
-                        int* id = new int(enetEvent.peer->connectID);
-                        enetEvent.peer->data = id;
-                        event.peerId = *id;
-                        event.ip = convertAddress(enetEvent.peer->address);
-                        event.port = enetEvent.peer->address.port;
-
-                } else if(enetEvent.type == ENET_EVENT_TYPE_RECEIVE) {
-                        event.type = EVENT_TYPE_RECEIVE;
-                        event.peerId = enetEvent.peer->connectID;
-
-                        std::stringstream in;
-                        in << enetEvent.packet->data;
-                        event.data = in.str();
-
-                        enet_packet_destroy(enetEvent.packet);
-
-                } else if(enetEvent.type == ENET_EVENT_TYPE_DISCONNECT) {
-                        event.type = EVENT_TYPE_DISCONNECT;
-                        event.peerId = *(int*)enetEvent.peer->data;
-
-                        /* TODO: Free data if the peer disconnects */
-                }
-        }
-
 public:
         Server(int port)
+                : Host(port)
         {
-                ENetAddress address;
-
-                address.host = ENET_HOST_ANY;
-                address.port = port;
-                host = enet_host_create(&address, 32, 2, 0, 0);
-
-                if(host == NULL) {
-                        /* TODO: Handle error */
-                }
-        }
-
-        ~Server()
-        {
-                enet_host_destroy(host);
-        }
-
-        bool pollEvent(Event& event)
-        {
-                ENetEvent enetEvent;
-
-                if(enet_host_service(host, &enetEvent, 0) > 0) {
-                        handleEvent(enetEvent, event);
-
-                        return true;
-                }
-
-                return false;
         }
 };
 
-class Client
+class Client : public Host
 {
 private:
-        ENetHost* host;
         ENetPeer* server;
-
-        void handleEvent(const ENetEvent& enetEvent, Event& event)
-        {
-                if(enetEvent.type == ENET_EVENT_TYPE_CONNECT) {
-                        event.type = EVENT_TYPE_CONNECT;
-                        int* id = new int(enetEvent.peer->connectID);
-                        enetEvent.peer->data = id;
-                        event.peerId = *id;
-                        event.ip = convertAddress(enetEvent.peer->address);
-                        event.port = enetEvent.peer->address.port;
-
-                } else if(enetEvent.type == ENET_EVENT_TYPE_RECEIVE) {
-                        event.type = EVENT_TYPE_RECEIVE;
-                        event.peerId = enetEvent.peer->connectID;
-
-                        std::stringstream in;
-                        in << enetEvent.packet->data;
-                        event.data = in.str();
-
-                        enet_packet_destroy(enetEvent.packet);
-
-                } else if(enetEvent.type == ENET_EVENT_TYPE_DISCONNECT) {
-                        event.type = EVENT_TYPE_DISCONNECT;
-                        event.peerId = *(int*)enetEvent.peer->data;
-
-                        /* TODO: Free data if the peer disconnects */
-                }
-        }
 
 public:
         Client()
+                : Host(PORT_ANY)
         {
-                host = enet_host_create(NULL, 1, 2, 0, 0);
-
-                if(host == NULL) {
-                        /* TODO: Handle error */
-                }
-        }
-
-        ~Client()
-        {
-                enet_host_destroy(host);
         }
 
         bool connect(const std::string& ip, int port)
@@ -147,19 +36,6 @@ public:
                 }
 
                 return true;
-        }
-
-        bool pollEvent(Event& event)
-        {
-                ENetEvent enetEvent;
-
-                if(enet_host_service(host, &enetEvent, 0) > 0) {
-                        handleEvent(enetEvent, event);
-
-                        return true;
-                }
-
-                return false;
         }
 
         bool send(const std::string& data)
@@ -182,15 +58,3 @@ public:
                 enet_host_flush(host);
         }
 };
-
-std::string convertAddress(const ENetAddress& address)
-{
-        char buffer[32];
-        std::string str = "";
-
-        if(enet_address_get_host_ip(&address, buffer, 32) == 0) {
-                str = buffer;
-        }
-
-        return str;
-}

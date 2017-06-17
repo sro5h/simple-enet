@@ -19,14 +19,14 @@ int main(int argc, char** argv)
                         Event event;
 
                         while(server.pollEvent(event)) {
-                                if(event.type == EVENT_TYPE_CONNECT) {
+                                if(event.type == Event::Connected) {
                                         std::cout << "New client[id=" << event.peerId <<
                                                 "] connected from [" << event.ip <<
                                                 ":" << event.port << "]." <<  std::endl;
-                                } else if(event.type == EVENT_TYPE_RECEIVE) {
+                                } else if(event.type == Event::Received) {
                                         std::cout << "Received[id=" << event.peerId <<
                                                 "]: " << event.data << std::endl;
-                                } else if(event.type == EVENT_TYPE_DISCONNECT) {
+                                } else if(event.type == Event::Disconnected) {
                                         std::cout << "Client[id=" << event.peerId <<
                                                 "] disconnected." << std::endl;
                                 }
@@ -44,7 +44,7 @@ int main(int argc, char** argv)
                         Event event;
 
                         while(client.pollEvent(event)) {
-                                if(event.type == EVENT_TYPE_CONNECT) {
+                                if(event.type == Event::Connected) {
                                         std::cout << "Connected to the server[id=" <<
                                                 event.peerId << "]." << std::endl;
                                         client.send("ping");
