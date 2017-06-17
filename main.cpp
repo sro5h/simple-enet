@@ -39,8 +39,7 @@ int main(int argc, char** argv)
                         std::cerr << "Could not connect to the server." << std::endl;
                 }
 
-                char key = 0;
-                while(key != 'q') {
+                for(int i = 0; i < 1000000; i++) {
                         Event event;
 
                         while(client.pollEvent(event)) {
@@ -50,8 +49,6 @@ int main(int argc, char** argv)
                                         client.send("ping");
                                 }
                         }
-
-                        std::cin >> key;
                 }
 
                 client.disconnect();
