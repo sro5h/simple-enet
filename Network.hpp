@@ -1,7 +1,6 @@
 #include "Host.hpp"
 
-class Server : public Host
-{
+class Server : public Host {
 public:
         Server(int port)
                 : Host(port)
@@ -9,8 +8,7 @@ public:
         }
 };
 
-class Client : public Host
-{
+class Client : public Host {
 private:
         ENetPeer* server;
 
@@ -28,7 +26,7 @@ public:
                 address.port = port;
                 server = enet_host_connect(host, &address, 2, 0);
 
-                if(server == NULL) {
+                if (server == NULL) {
                         /* Couldn't establish connection */
                         return false;
                 }
@@ -41,7 +39,7 @@ public:
                 ENetPacket* packet = enet_packet_create(data.c_str(),
                                 data.length() + 1, ENET_PACKET_FLAG_RELIABLE);
 
-                if(enet_peer_send(server, 0, packet) != 0) {
+                if (enet_peer_send(server, 0, packet) != 0) {
                         /* Packet could not be sent */
                         return false;
                 }

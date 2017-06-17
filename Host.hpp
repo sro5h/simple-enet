@@ -5,8 +5,7 @@
 
 std::string convertAddress(const ENetAddress& address);
 
-struct Event
-{
+struct Event {
         enum EventType
         {
                 Connected,
@@ -21,8 +20,7 @@ struct Event
         unsigned int port;
 };
 
-class Host
-{
+class Host {
 protected:
         ENetHost* host;
 
@@ -63,7 +61,7 @@ protected:
 public:
         Host(int port)
         {
-                if(port == PORT_ANY) {
+                if (port == PORT_ANY) {
                         host = enet_host_create(NULL, 1, 2, 0, 0);
 
                 } else {
@@ -74,7 +72,7 @@ public:
                         host = enet_host_create(&address, 32, 2, 0, 0);
                 }
 
-                if(host == NULL) {
+                if (host == NULL) {
                         /* TODO: Handle error */
                 }
         }
@@ -88,14 +86,14 @@ public:
         {
                 ENetEvent enetEvent;
 
-                if(enet_host_service(host, &enetEvent, 0) > 0) {
-                        if(enetEvent.type == ENET_EVENT_TYPE_CONNECT) {
+                if (enet_host_service(host, &enetEvent, 0) > 0) {
+                        if (enetEvent.type == ENET_EVENT_TYPE_CONNECT) {
                                 onConnect(enetEvent, event);
 
-                        } else if(enetEvent.type == ENET_EVENT_TYPE_RECEIVE) {
+                        } else if (enetEvent.type == ENET_EVENT_TYPE_RECEIVE) {
                                 onReceive(enetEvent, event);
 
-                        } else if(enetEvent.type == ENET_EVENT_TYPE_DISCONNECT) {
+                        } else if (enetEvent.type == ENET_EVENT_TYPE_DISCONNECT) {
                                 onDisconnect(enetEvent, event);
                         }
 
@@ -111,7 +109,7 @@ std::string convertAddress(const ENetAddress& address)
         char buffer[32];
         std::string str = "";
 
-        if(enet_address_get_host_ip(&address, buffer, 32) == 0) {
+        if (enet_address_get_host_ip(&address, buffer, 32) == 0) {
                 str = buffer;
         }
 
