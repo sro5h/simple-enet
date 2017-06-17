@@ -1,6 +1,4 @@
 #include "Host.hpp"
-#include <iostream>
-
 
 class Server : public Host
 {
@@ -53,7 +51,6 @@ public:
 
         bool disconnect()
         {
-                std::cout << "Disconnecting from " << server->connectID << std::endl;
                 enet_peer_disconnect(server, server->connectID);
                 enet_host_flush(host);
         }
