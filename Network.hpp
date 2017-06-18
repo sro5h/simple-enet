@@ -1,3 +1,6 @@
+#ifndef NETWORK_HPP
+#define NETWORK_HPP
+
 #include "Host.hpp"
 
 /**
@@ -75,3 +78,5 @@ public:
                 enet_host_flush(host);
         }
 };
+
+#endif /* Header guards */
