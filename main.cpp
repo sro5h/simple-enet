@@ -5,28 +5,35 @@
 
 int main(int argc, char** argv)
 {
-        if(enet_initialize() != 0)
+        if (enet_initialize() != 0)
                 std::cerr << "Could not initialize enet." << std::endl;
 
         char mode;
         std::cout << "Server(s) or Client(c)? " << std::flush;
         std::cin >> mode;
 
-        if(mode == 's') {
-                Server server(PORT);
+        if (mode == 's') {
+                Server server;
 
-                while(true) {
+                if (!server.create(PORT)) {
+                        std::cerr << "Could not create the host." << std::endl;
+                        return 1;
+                }
+
+                std::cout << "Host created." << std::endl;
+
+                while (true) {
                         Event event;
 
-                        while(server.pollEvent(event)) {
-                                if(event.type == Event::CONNECTED) {
+                        while (server.pollEvent(event)) {
+                                if (event.type == Event::CONNECTED) {
                                         std::cout << "New client[id=" << event.peerId <<
                                                 "] connected from [" << event.ip <<
                                                 ":" << event.port << "]." <<  std::endl;
-                                } else if(event.type == Event::RECEIVED) {
+                                } else if (event.type == Event::RECEIVED) {
                                         std::cout << "Received[id=" << event.peerId <<
                                                 "]: " << event.data << std::endl;
-                                } else if(event.type == Event::DISCONNECTED) {
+                                } else if (event.type == Event::DISCONNECTED) {
                                         std::cout << "Client[id=" << event.peerId <<
                                                 "] disconnected." << std::endl;
                                 }
@@ -34,25 +41,43 @@ int main(int argc, char** argv)
                 }
         } else {
                 Client client;
+                bool connected = true;
+                int i = 0;
+
+                if (!client.create(PORT_ANY)) {
+                        std::cerr << "Could not create the host." << std::endl;
+                        return 1;
+                }
+
+                std::cout << "Host created." << std::endl;
 
                 /* Try to connect to the server */
-                if(!client.connect("localhost", PORT)) {
+                if (!client.connect("localhost", PORT)) {
                         std::cerr << "Could not connect to the server." << std::endl;
                 }
 
-                for(int i = 0; i < 1000000; i++) {
+                while (connected) {
                         Event event;
 
-                        while(client.pollEvent(event)) {
-                                if(event.type == Event::CONNECTED) {
+                        while (client.pollEvent(event)) {
+                                if (event.type == Event::CONNECTED) {
                                         std::cout << "Connected to the server[id=" <<
                                                 event.peerId << "]." << std::endl;
                                         client.send("ping");
+
+                                } else if (event.type == Event::DISCONNECTED) {
+                                        std::cout << "Disconnected from the server[id=" <<
+                                                event.peerId << "]." << std::endl;
+                                        connected = false;
                                 }
                         }
-                }
 
-                client.disconnect();
+                        if (i > 10000000) {
+                                client.disconnect();
+                        }
+
+                        ++i;
+                }
         }
 
         return 0;

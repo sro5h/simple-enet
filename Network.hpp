@@ -4,11 +4,7 @@
  * The server implementation.
  */
 class Server : public Host {
-public:
-        Server(int port)
-                : Host(port)
-        {
-        }
+
 };
 
 /**
@@ -19,11 +15,6 @@ private:
         ENetPeer* server;
 
 public:
-        Client()
-                : Host(PORT_ANY)
-        {
-        }
-
         /**
          * Connect to a remote ENetHost on ip:port.
          *

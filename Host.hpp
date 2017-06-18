@@ -78,10 +78,20 @@ protected:
 
 public:
         /**
+         * Destroys the ENetHost.
+         */
+        ~Host()
+        {
+                enet_host_destroy(host);
+        }
+
+        /**
          * Creates an ENetHost on the specified port or if port equals PORT_ANY
          * on a availlable port.
+         *
+         * @return true if successful, false otherwise
          */
-        Host(int port)
+        bool create(int port)
         {
                 if (port == PORT_ANY) {
                         host = enet_host_create(NULL, 1, 2, 0, 0);
@@ -94,17 +104,7 @@ public:
                         host = enet_host_create(&address, 32, 2, 0, 0);
                 }
 
-                if (host == NULL) {
-                        /* TODO: Handle error */
-                }
-        }
-
-        /**
-         * Destroys the ENetHost.
-         */
-        ~Host()
-        {
-                enet_host_destroy(host);
+                return host != NULL;
         }
 
         /**
