@@ -6,26 +6,32 @@
 /* For convenience */
 using json = nlohmann::json;
 
-struct Tick {
+struct ClientTick {
         bool left;
         bool right;
+        bool up;
+        bool down;
 
-        Tick()
+        ClientTick()
         {
                 left = false;
                 right = false;
+                up = false;
+                down = false;
         }
 };
 
-void to_json(json& j, const Tick& t)
+void to_json(json& j, const ClientTick& t)
 {
-        j = json { { "left", t.left }, { "right", t.right } };
+        j = json { { "left", t.left }, { "right", t.right }, { "up", t.up }, { "down", t.down } };
 }
 
-void from_json(const json& j, Tick& t)
+void from_json(const json& j, ClientTick& t)
 {
         t.left = j.at("left").get<bool>();
         t.right = j.at("right").get<bool>();
+        t.up = j.at("up").get<bool>();
+        t.down = j.at("down").get<bool>();
 }
 
 #endif /* Header guards */

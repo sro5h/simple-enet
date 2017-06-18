@@ -168,15 +168,20 @@ void clientPoll(Client& client)
 
 void serverOnReceive(ServerHost& serverHost, const std::string& data)
 {
-        json j = json::parse(data);
-        Tick t = j;
+        ClientTick t = json::parse(data);
         sf::Vector2f tmp = serverHost.client.getPosition();
 
         if (t.left) {
-                tmp.x -= 0.1;
+                tmp.x -= 0.05;
         }
         if (t.right) {
-                tmp.x += 0.1;
+                tmp.x += 0.05;
+        }
+        if (t.up) {
+                tmp.y -= 0.05;
+        }
+        if (t.down) {
+                tmp.y += 0.05;
         }
 
         serverHost.client.setPosition(tmp);
@@ -184,14 +189,12 @@ void serverOnReceive(ServerHost& serverHost, const std::string& data)
 
 void clientHandleInput(Client& client, sf::RenderWindow& window)
 {
-        Tick t;
+        ClientTick t;
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-                t.left = true;
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-                t.right = true;
-        }
+        t.left = sf::Keyboard::isKeyPressed(sf::Keyboard::A);
+        t.right = sf::Keyboard::isKeyPressed(sf::Keyboard::D);
+        t.up = sf::Keyboard::isKeyPressed(sf::Keyboard::W);
+        t.down = sf::Keyboard::isKeyPressed(sf::Keyboard::S);
 
         json j = t;
         client.send(j.dump());
