@@ -4,7 +4,17 @@
  * The server implementation.
  */
 class Server : public Host {
+public:
+        /**
+         * Send string data to all connected ENetPeers.
+         */
+        void sendToAll(const std::string& data)
+        {
+                ENetPacket* packet = enet_packet_create(data.c_str(),
+                                data.length() + 1, ENET_PACKET_FLAG_RELIABLE);
 
+                enet_host_broadcast(host, 0, packet);
+        }
 };
 
 /**
