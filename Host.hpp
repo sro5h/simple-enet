@@ -20,7 +20,7 @@ struct Event {
         };
 
         EventType type;
-        unsigned int peerId;
+        unsigned int connectId;
         std::string data;
         std::string ip;
         unsigned int port;
@@ -44,7 +44,7 @@ protected:
                 /* Store the connectID in ENetPeer::data */
                 int* id = new int(enetEvent.peer->connectID);
                 enetEvent.peer->data = id;
-                event.peerId = *id;
+                event.connectId = *id;
 
                 event.ip = convertAddress(enetEvent.peer->address);
                 event.port = enetEvent.peer->address.port;
@@ -57,7 +57,7 @@ protected:
         void onReceive(const ENetEvent& enetEvent, Event& event)
         {
                 event.type = Event::RECEIVED;
-                event.peerId = enetEvent.peer->connectID;
+                event.connectId = enetEvent.peer->connectID;
 
                 /* Convert the sent data to a std::string */
                 std::stringstream tmp;
@@ -74,7 +74,7 @@ protected:
         void onDisconnect(const ENetEvent& enetEvent, Event& event)
         {
                 event.type = Event::DISCONNECTED;
-                event.peerId = *(int*) enetEvent.peer->data;
+                event.connectId = *(int*) enetEvent.peer->data;
 
                 /* TODO: Free data if the peer disconnects */
         }

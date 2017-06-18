@@ -131,20 +131,20 @@ void serverPoll(ServerHost& serverHost)
 
         while (serverHost.server.pollEvent(event)) {
                 if (event.type == Event::CONNECTED) {
-                        std::cout << "New client[id=" << event.peerId <<
+                        std::cout << "New client[id=" << event.connectId <<
                                 "] connected from [" << event.ip <<
                                 ":" << event.port << "]." <<  std::endl;
-                        serverHost.clients[event.peerId] = sf::CircleShape(10.0f);
+                        serverHost.clients[event.connectId] = sf::CircleShape(10.0f);
 
                 } else if (event.type == Event::RECEIVED) {
-                        std::cout << "Received[id=" << event.peerId <<
+                        std::cout << "Received[id=" << event.connectId <<
                                 "]: " << event.data << std::endl;
                         serverOnReceive(serverHost, event);
 
                 } else if (event.type == Event::DISCONNECTED) {
-                        std::cout << "Client[id=" << event.peerId <<
+                        std::cout << "Client[id=" << event.connectId <<
                                 "] disconnected." << std::endl;
-                        serverHost.clients.erase(event.peerId);
+                        serverHost.clients.erase(event.connectId);
                         std::cout << "Shape count: " <<
                                 serverHost.clients.size() << std::endl;
                 }
@@ -158,15 +158,15 @@ void clientPoll(Client& client)
         while (client.pollEvent(event)) {
                 if (event.type == Event::CONNECTED) {
                         std::cout << "Connected to the server[id=" <<
-                                event.peerId << "]." << std::endl;
+                                event.connectId << "]." << std::endl;
 
                 } else if (event.type == Event::RECEIVED) {
-                        std::cout << "Received[id=" << event.peerId <<
+                        std::cout << "Received[id=" << event.connectId <<
                                 "]: " << event.data << std::endl;
 
                 } else if (event.type == Event::DISCONNECTED) {
                         std::cout << "Disconnected from the server[id=" <<
-                                event.peerId << "]." << std::endl;
+                                event.connectId << "]." << std::endl;
                 }
         }
 }
@@ -174,7 +174,7 @@ void clientPoll(Client& client)
 void serverOnReceive(ServerHost& serverHost, const Event& event)
 {
         ClientTick t = json::parse(event.data);
-        sf::Vector2f tmp = serverHost.clients[event.peerId].getPosition();
+        sf::Vector2f tmp = serverHost.clients[event.connectId].getPosition();
 
         if (t.left) {
                 tmp.x -= 0.05;
@@ -189,7 +189,7 @@ void serverOnReceive(ServerHost& serverHost, const Event& event)
                 tmp.y += 0.05;
         }
 
-        serverHost.clients[event.peerId].setPosition(tmp);
+        serverHost.clients[event.connectId].setPosition(tmp);
 }
 
 void clientHandleInput(Client& client, sf::RenderWindow& window)
