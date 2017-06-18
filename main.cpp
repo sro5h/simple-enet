@@ -6,6 +6,8 @@
 
 bool runServer(sf::RenderWindow& window);
 bool runClient(sf::RenderWindow& window);
+void pollServer(Server& server);
+void pollClient(Client& client);
 
 int main(int argc, char** argv)
 {
@@ -46,44 +48,27 @@ bool runServer(sf::RenderWindow& window)
         std::cout << "Host created." << std::endl;
 
         while (window.isOpen()) {
-                sf::Event windowEvent;
-                Event hostEvent;
+                sf::Event event;
 
                 /* Poll the window for events */
-                while (window.pollEvent(windowEvent)) {
-                        if (windowEvent.type == sf::Event::Closed) {
+                while (window.pollEvent(event)) {
+                        if (event.type == sf::Event::Closed) {
                                 window.close();
                         }
-                        if (windowEvent.type == sf::Event::KeyPressed &&
-                                        windowEvent.key.code == sf::Keyboard::Q) {
+                        if (event.type == sf::Event::KeyPressed &&
+                                        event.key.code == sf::Keyboard::Q) {
                                 window.close();
                         }
                 }
 
                 /* Poll the server for events */
-                while (server.pollEvent(hostEvent)) {
-                        if (hostEvent.type == Event::CONNECTED) {
-                                std::cout << "New client[id=" << hostEvent.peerId <<
-                                        "] connected from [" << hostEvent.ip <<
-                                        ":" << hostEvent.port << "]." <<  std::endl;
-                        } else if (hostEvent.type == Event::RECEIVED) {
-                                std::cout << "Received[id=" << hostEvent.peerId <<
-                                        "]: " << hostEvent.data << std::endl;
-                        } else if (hostEvent.type == Event::DISCONNECTED) {
-                                std::cout << "Client[id=" << hostEvent.peerId <<
-                                        "] disconnected." << std::endl;
-                        }
-                }
+                pollServer(server);
 
                 window.clear();
                 window.display();
         }
 
         return true;
-}
-
-void handleServerEvents(Server& server)
-{
 }
 
 bool runClient(sf::RenderWindow& window)
@@ -103,40 +88,65 @@ bool runClient(sf::RenderWindow& window)
         }
 
         while (window.isOpen()) {
-                sf::Event windowEvent;
-                Event hostEvent;
+                sf::Event event;
 
                 /* Poll the window for events */
-                while (window.pollEvent(windowEvent)) {
-                        if (windowEvent.type == sf::Event::Closed) {
+                while (window.pollEvent(event)) {
+                        if (event.type == sf::Event::Closed) {
                                 window.close();
                         }
-                        if (windowEvent.type == sf::Event::KeyPressed &&
-                                        windowEvent.key.code == sf::Keyboard::Q) {
+                        if (event.type == sf::Event::KeyPressed &&
+                                        event.key.code == sf::Keyboard::Q) {
                                 window.close();
                         }
-                        if (windowEvent.type == sf::Event::KeyPressed &&
-                                        windowEvent.key.code == sf::Keyboard::D) {
+                        if (event.type == sf::Event::KeyPressed &&
+                                        event.key.code == sf::Keyboard::D) {
                                 client.disconnect();
                         }
                 }
 
                 /* Poll the server for events */
-                while (client.pollEvent(hostEvent)) {
-                        if (hostEvent.type == Event::CONNECTED) {
-                                std::cout << "Connected to the server[id=" <<
-                                        hostEvent.peerId << "]." << std::endl;
-                                client.send("ping");
-
-                        } else if (hostEvent.type == Event::DISCONNECTED) {
-                                std::cout << "Disconnected from the server[id=" <<
-                                        hostEvent.peerId << "]." << std::endl;
-                        }
-                }
+                pollClient(client);
 
                 window.clear();
                 window.display();
         }
 
         return true;
+}
+
+void pollServer(Server& server)
+{
+        Event event;
+
+        while (server.pollEvent(event)) {
+                if (event.type == Event::CONNECTED) {
+                        std::cout << "New client[id=" << event.peerId <<
+                                "] connected from [" << event.ip <<
+                                ":" << event.port << "]." <<  std::endl;
+                } else if (event.type == Event::RECEIVED) {
+                        std::cout << "Received[id=" << event.peerId <<
+                                "]: " << event.data << std::endl;
+                } else if (event.type == Event::DISCONNECTED) {
+                        std::cout << "Client[id=" << event.peerId <<
+                                "] disconnected." << std::endl;
+                }
+        }
+}
+
+void pollClient(Client& client)
+{
+        Event event;
+
+        while (client.pollEvent(event)) {
+                if (event.type == Event::CONNECTED) {
+                        std::cout << "Connected to the server[id=" <<
+                                event.peerId << "]." << std::endl;
+                        client.send("ping");
+
+                } else if (event.type == Event::DISCONNECTED) {
+                        std::cout << "Disconnected from the server[id=" <<
+                                event.peerId << "]." << std::endl;
+                }
+        }
 }
