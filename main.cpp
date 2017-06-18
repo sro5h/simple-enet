@@ -123,9 +123,12 @@ void pollServer(Server& server)
                         std::cout << "New client[id=" << event.peerId <<
                                 "] connected from [" << event.ip <<
                                 ":" << event.port << "]." <<  std::endl;
+
                 } else if (event.type == Event::RECEIVED) {
                         std::cout << "Received[id=" << event.peerId <<
                                 "]: " << event.data << std::endl;
+                        server.sendToAll("pong");
+
                 } else if (event.type == Event::DISCONNECTED) {
                         std::cout << "Client[id=" << event.peerId <<
                                 "] disconnected." << std::endl;
@@ -142,6 +145,10 @@ void pollClient(Client& client)
                         std::cout << "Connected to the server[id=" <<
                                 event.peerId << "]." << std::endl;
                         client.send("ping");
+
+                } else if (event.type == Event::RECEIVED) {
+                        std::cout << "Received[id=" << event.peerId <<
+                                "]: " << event.data << std::endl;
 
                 } else if (event.type == Event::DISCONNECTED) {
                         std::cout << "Disconnected from the server[id=" <<
