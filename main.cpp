@@ -1,13 +1,15 @@
 #include <iostream>
-#include <SFML/Graphics.hpp>
-#include "Network.hpp"
+#include "ServerHost.hpp"
+#include "Tick.hpp"
 
 #define PORT 42323
 
-bool runServer(sf::RenderWindow& window);
-bool runClient(sf::RenderWindow& window);
-void pollServer(Server& server);
-void pollClient(Client& client);
+bool serverRun(sf::RenderWindow& window);
+bool clientRun(sf::RenderWindow& window);
+void serverPoll(ServerHost& serverHost);
+void clientPoll(Client& client);
+void serverOnReceive(ServerHost& serverHost, const std::string& data);
+void clientHandleInput(Client& client, sf::RenderWindow& window);
 
 int main(int argc, char** argv)
 {
@@ -24,22 +26,24 @@ int main(int argc, char** argv)
         sf::RenderWindow window(sf::VideoMode(400, 400), mode);
 
         if (mode == "server") {
-                if(!runServer(window))
+                if(!serverRun(window))
                         return 1;
 
         } else {
-                if(!runClient(window))
+                if(!clientRun(window))
                         return 1;
         }
 
         return 0;
 }
 
-bool runServer(sf::RenderWindow& window)
+bool serverRun(sf::RenderWindow& window)
 {
-        Server server;
+        ServerHost serverHost;
+        serverHost.client.setRadius(10.0f);
+        serverHost.client.setPosition(-20.0f, -20.0f);
 
-        if (!server.create(PORT)) {
+        if (!serverHost.server.create(PORT)) {
                 std::cerr << "Could not create the host." << std::endl;
                 return false;
         }
@@ -61,16 +65,17 @@ bool runServer(sf::RenderWindow& window)
                 }
 
                 /* Poll the server for events */
-                pollServer(server);
+                serverPoll(serverHost);
 
                 window.clear();
+                window.draw(serverHost.client);
                 window.display();
         }
 
         return true;
 }
 
-bool runClient(sf::RenderWindow& window)
+bool clientRun(sf::RenderWindow& window)
 {
         Client client;
 
@@ -99,13 +104,16 @@ bool runClient(sf::RenderWindow& window)
                                 window.close();
                         }
                         if (event.type == sf::Event::KeyPressed &&
-                                        event.key.code == sf::Keyboard::D) {
+                                        event.key.code == sf::Keyboard::C) {
                                 client.disconnect();
                         }
                 }
 
+                /* Handle keyboard input */
+                clientHandleInput(client, window);
+
                 /* Poll the server for events */
-                pollClient(client);
+                clientPoll(client);
 
                 window.clear();
                 window.display();
@@ -114,29 +122,31 @@ bool runClient(sf::RenderWindow& window)
         return true;
 }
 
-void pollServer(Server& server)
+void serverPoll(ServerHost& serverHost)
 {
         Event event;
 
-        while (server.pollEvent(event)) {
+        while (serverHost.server.pollEvent(event)) {
                 if (event.type == Event::CONNECTED) {
                         std::cout << "New client[id=" << event.peerId <<
                                 "] connected from [" << event.ip <<
                                 ":" << event.port << "]." <<  std::endl;
+                        serverHost.client.setPosition(200.0f, 200.0f);
 
                 } else if (event.type == Event::RECEIVED) {
                         std::cout << "Received[id=" << event.peerId <<
                                 "]: " << event.data << std::endl;
-                        server.sendToAll("pong");
+                        serverOnReceive(serverHost, event.data);
 
                 } else if (event.type == Event::DISCONNECTED) {
                         std::cout << "Client[id=" << event.peerId <<
                                 "] disconnected." << std::endl;
+                        serverHost.client.setPosition(-20.0f, -20.0f);
                 }
         }
 }
 
-void pollClient(Client& client)
+void clientPoll(Client& client)
 {
         Event event;
 
@@ -144,7 +154,6 @@ void pollClient(Client& client)
                 if (event.type == Event::CONNECTED) {
                         std::cout << "Connected to the server[id=" <<
                                 event.peerId << "]." << std::endl;
-                        client.send("ping");
 
                 } else if (event.type == Event::RECEIVED) {
                         std::cout << "Received[id=" << event.peerId <<
@@ -155,4 +164,35 @@ void pollClient(Client& client)
                                 event.peerId << "]." << std::endl;
                 }
         }
+}
+
+void serverOnReceive(ServerHost& serverHost, const std::string& data)
+{
+        json j = json::parse(data);
+        Tick t = j;
+        sf::Vector2f tmp = serverHost.client.getPosition();
+
+        if (t.left) {
+                tmp.x -= 0.1;
+        }
+        if (t.right) {
+                tmp.x += 0.1;
+        }
+
+        serverHost.client.setPosition(tmp);
+}
+
+void clientHandleInput(Client& client, sf::RenderWindow& window)
+{
+        Tick t;
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+                t.left = true;
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+                t.right = true;
+        }
+
+        json j = t;
+        client.send(j.dump());
 }

@@ -7,19 +7,25 @@
 using json = nlohmann::json;
 
 struct Tick {
-        float x;
-        float y;
+        bool left;
+        bool right;
+
+        Tick()
+        {
+                left = false;
+                right = false;
+        }
 };
 
 void to_json(json& j, const Tick& t)
 {
-        j = json { { "x", t.x }, { "y", t.y } };
+        j = json { { "left", t.left }, { "right", t.right } };
 }
 
 void from_json(const json& j, Tick& t)
 {
-        t.x = j.at("x").get<float>();
-        t.y = j.at("y").get<float>();
+        t.left = j.at("left").get<bool>();
+        t.right = j.at("right").get<bool>();
 }
 
 #endif /* Header guards */
