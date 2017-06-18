@@ -12,9 +12,9 @@ void pollClient(Client& client);
 int main(int argc, char** argv)
 {
         std::string mode = "server";
-        if (argc > 1) {
+
+        if (argc > 1)
                 mode = argv[1];
-        }
 
         /* Initialize enet */
         if (enet_initialize() != 0)
@@ -24,13 +24,12 @@ int main(int argc, char** argv)
         sf::RenderWindow window(sf::VideoMode(400, 400), mode);
 
         if (mode == "server") {
-                if(!runServer(window)) {
+                if(!runServer(window))
                         return 1;
-                }
+
         } else {
-                if(!runClient(window)) {
+                if(!runClient(window))
                         return 1;
-                }
         }
 
         return 0;
