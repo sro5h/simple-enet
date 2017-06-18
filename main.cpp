@@ -8,7 +8,7 @@ bool serverRun(sf::RenderWindow& window);
 bool clientRun(sf::RenderWindow& window);
 void serverPoll(ServerHost& serverHost);
 void clientPoll(Client& client);
-void serverOnReceive(ServerHost& serverHost, const std::string& data);
+void serverOnReceive(ServerHost& serverHost, const Event& event);
 void clientHandleInput(Client& client, sf::RenderWindow& window);
 
 int main(int argc, char** argv)
@@ -40,8 +40,6 @@ int main(int argc, char** argv)
 bool serverRun(sf::RenderWindow& window)
 {
         ServerHost serverHost;
-        serverHost.client.setRadius(10.0f);
-        serverHost.client.setPosition(-20.0f, -20.0f);
 
         if (!serverHost.server.create(PORT)) {
                 std::cerr << "Could not create the host." << std::endl;
@@ -68,7 +66,12 @@ bool serverRun(sf::RenderWindow& window)
                 serverPoll(serverHost);
 
                 window.clear();
-                window.draw(serverHost.client);
+
+                /* Print all clients */
+                for(auto& entry : serverHost.clients) {
+                        window.draw(entry.second);
+                }
+
                 window.display();
         }
 
@@ -131,17 +134,19 @@ void serverPoll(ServerHost& serverHost)
                         std::cout << "New client[id=" << event.peerId <<
                                 "] connected from [" << event.ip <<
                                 ":" << event.port << "]." <<  std::endl;
-                        serverHost.client.setPosition(200.0f, 200.0f);
+                        serverHost.clients[event.peerId] = sf::CircleShape(10.0f);
 
                 } else if (event.type == Event::RECEIVED) {
                         std::cout << "Received[id=" << event.peerId <<
                                 "]: " << event.data << std::endl;
-                        serverOnReceive(serverHost, event.data);
+                        serverOnReceive(serverHost, event);
 
                 } else if (event.type == Event::DISCONNECTED) {
                         std::cout << "Client[id=" << event.peerId <<
                                 "] disconnected." << std::endl;
-                        serverHost.client.setPosition(-20.0f, -20.0f);
+                        serverHost.clients.erase(event.peerId);
+                        std::cout << "Shape count: " <<
+                                serverHost.clients.size() << std::endl;
                 }
         }
 }
@@ -166,10 +171,10 @@ void clientPoll(Client& client)
         }
 }
 
-void serverOnReceive(ServerHost& serverHost, const std::string& data)
+void serverOnReceive(ServerHost& serverHost, const Event& event)
 {
-        ClientTick t = json::parse(data);
-        sf::Vector2f tmp = serverHost.client.getPosition();
+        ClientTick t = json::parse(event.data);
+        sf::Vector2f tmp = serverHost.clients[event.peerId].getPosition();
 
         if (t.left) {
                 tmp.x -= 0.05;
@@ -184,17 +189,19 @@ void serverOnReceive(ServerHost& serverHost, const std::string& data)
                 tmp.y += 0.05;
         }
 
-        serverHost.client.setPosition(tmp);
+        serverHost.clients[event.peerId].setPosition(tmp);
 }
 
 void clientHandleInput(Client& client, sf::RenderWindow& window)
 {
         ClientTick t;
 
-        t.left = sf::Keyboard::isKeyPressed(sf::Keyboard::A);
-        t.right = sf::Keyboard::isKeyPressed(sf::Keyboard::D);
-        t.up = sf::Keyboard::isKeyPressed(sf::Keyboard::W);
-        t.down = sf::Keyboard::isKeyPressed(sf::Keyboard::S);
+        if (window.hasFocus()) {
+                t.left  = sf::Keyboard::isKeyPressed(sf::Keyboard::A);
+                t.right = sf::Keyboard::isKeyPressed(sf::Keyboard::D);
+                t.up    = sf::Keyboard::isKeyPressed(sf::Keyboard::W);
+                t.down  = sf::Keyboard::isKeyPressed(sf::Keyboard::S);
+        }
 
         json j = t;
         client.send(j.dump());
