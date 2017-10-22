@@ -3,6 +3,7 @@
 
 #include <enet/enet.h>
 #include <sstream>
+#include <list>
 
 #define PORT_ANY -1
 
@@ -32,6 +33,7 @@ struct Event {
 class Host {
 protected:
         ENetHost* host;
+        std::list<unsigned int> connectIds;
 
         /**
          * Gets called after an ENetPeer connects or a connection attempt was
@@ -42,9 +44,9 @@ protected:
                 event.type = Event::CONNECTED;
 
                 /* Store the connectID in ENetPeer::data */
-                int* id = new int(enetEvent.peer->connectID);
-                enetEvent.peer->data = id;
-                event.peerId = *id;
+                connectIds.push_back(enetEvent.peer->connectID);
+                enetEvent.peer->data = &connectIds.back();
+                event.peerId = connectIds.back();
 
                 event.ip = convertAddress(enetEvent.peer->address);
                 event.port = enetEvent.peer->address.port;
@@ -57,7 +59,7 @@ protected:
         void onReceive(const ENetEvent& enetEvent, Event& event)
         {
                 event.type = Event::RECEIVED;
-                event.peerId = enetEvent.peer->connectID;
+                event.peerId = *(int*) enetEvent.peer->data;
 
                 /* Convert the sent data to a std::string */
                 std::stringstream tmp;
@@ -74,9 +76,11 @@ protected:
         void onDisconnect(const ENetEvent& enetEvent, Event& event)
         {
                 event.type = Event::DISCONNECTED;
-                event.peerId = *(int*) enetEvent.peer->data;
+                unsigned int connectId = *(int*) enetEvent.peer->data;
+                event.peerId = connectId;
 
                 /* TODO: Free data if the peer disconnects */
+                connectIds.remove(connectId);
         }
 
 public:
