@@ -17,7 +17,7 @@ project "app"
     filter "configurations:Debug"
         defines { "DEBUG" }
         symbols "On"
-        links { ":libenet.a" }
+        links { "enet" }
 
 -- Clean function
 newaction {
