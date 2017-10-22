@@ -15,7 +15,7 @@ int main(int argc, char** argv)
         if (mode == 's') {
                 Server server;
 
-                if (!server.create(PORT)) {
+                if (!server.create(PORT, 32)) {
                         std::cerr << "Could not create the host." << std::endl;
                         return 1;
                 }
@@ -47,7 +47,7 @@ int main(int argc, char** argv)
                 bool connected = true;
                 int i = 0;
 
-                if (!client.create(PORT_ANY)) {
+                if (!client.create(PORT_ANY, 1)) {
                         std::cerr << "Could not create the host." << std::endl;
                         return 1;
                 }

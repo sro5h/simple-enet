@@ -98,17 +98,17 @@ public:
          *
          * @return true if successful, false otherwise
          */
-        bool create(int port)
+        bool create(int port, unsigned int connections)
         {
                 if (port == PORT_ANY) {
-                        host = enet_host_create(NULL, 1, 2, 0, 0);
+                        host = enet_host_create(NULL, connections, 2, 0, 0);
 
                 } else {
                         ENetAddress address;
 
                         address.host = ENET_HOST_ANY;
                         address.port = port;
-                        host = enet_host_create(&address, 32, 2, 0, 0);
+                        host = enet_host_create(&address, connections, 2, 0, 0);
                 }
 
                 return host != NULL;
