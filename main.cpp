@@ -87,5 +87,6 @@ int main(int argc, char** argv)
                 }
         }
 
+        enet_deinitialize();
         return 0;
 }
