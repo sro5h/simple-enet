@@ -3,7 +3,6 @@
 
 #include <enet/enet.h>
 #include <sstream>
-#include <list>
 
 #define PORT_ANY -1
 
@@ -44,7 +43,6 @@ struct Event {
 class Host {
 protected:
         ENetHost* host;
-        std::list<unsigned int> connectIds;
 
         /**
          * Gets called after an ENetPeer connects or a connection attempt was
