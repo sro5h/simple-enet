@@ -27,17 +27,17 @@ int main(int argc, char** argv)
 
                         while (server.pollEvent(event)) {
                                 if (event.type == EventType::Connected) {
-                                        std::cout << "New client[id=" << event.peerId <<
+                                        std::cout << "New client[id=" << event.incomingId <<
                                                 "] connected from [" << event.ip <<
                                                 ":" << event.port << "]." <<  std::endl;
 
                                 } else if (event.type == EventType::Received) {
-                                        std::cout << "Received[id=" << event.peerId <<
+                                        std::cout << "Received[id=" << event.incomingId <<
                                                 "]: " << event.data << std::endl;
                                         server.sendToAll("pong");
 
                                 } else if (event.type == EventType::Disconnected) {
-                                        std::cout << "Client[id=" << event.peerId <<
+                                        std::cout << "Client[id=" << event.incomingId <<
                                                 "] disconnected." << std::endl;
                                 }
                         }
@@ -65,16 +65,16 @@ int main(int argc, char** argv)
                         while (client.pollEvent(event)) {
                                 if (event.type == EventType::Connected) {
                                         std::cout << "Connected to the server[id=" <<
-                                                event.peerId << "]." << std::endl;
+                                                event.incomingId << "]." << std::endl;
                                         client.send("ping");
 
                                 } else if (event.type == EventType::Received) {
-                                        std::cout << "Received[id=" << event.peerId <<
+                                        std::cout << "Received[id=" << event.incomingId <<
                                                 "]: " << event.data << std::endl;
 
                                 } else if (event.type == EventType::Disconnected) {
                                         std::cout << "Disconnected from the server[id=" <<
-                                                event.peerId << "]." << std::endl;
+                                                event.incomingId << "]." << std::endl;
                                         connected = false;
                                 }
                         }

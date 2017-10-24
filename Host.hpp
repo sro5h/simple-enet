@@ -23,7 +23,8 @@ enum class EventType {
  */
 struct Event {
         EventType type;
-        unsigned int peerId;
+        unsigned int incomingId;
+        unsigned int outgoingId;
         std::string data;
         std::string ip;
         unsigned int port;
@@ -44,7 +45,8 @@ protected:
         void onConnect(const ENetEvent& enetEvent, Event& event) const
         {
                 event.type = EventType::Connected;
-                event.peerId = enetEvent.peer->incomingPeerID;
+                event.incomingId = enetEvent.peer->incomingPeerID;
+                event.outgoingId = enetEvent.peer->outgoingPeerID;
                 event.ip = convertAddress(enetEvent.peer->address);
                 event.port = enetEvent.peer->address.port;
         }
@@ -56,7 +58,8 @@ protected:
         void onReceive(const ENetEvent& enetEvent, Event& event) const
         {
                 event.type = EventType::Received;
-                event.peerId = enetEvent.peer->incomingPeerID;
+                event.incomingId = enetEvent.peer->incomingPeerID;
+                event.outgoingId = enetEvent.peer->outgoingPeerID;
                 event.ip = convertAddress(enetEvent.peer->address);
                 event.port = enetEvent.peer->address.port;
 
@@ -75,7 +78,8 @@ protected:
         void onDisconnect(const ENetEvent& enetEvent, Event& event) const
         {
                 event.type = EventType::Disconnected;
-                event.peerId = enetEvent.peer->incomingPeerID;
+                event.incomingId = enetEvent.peer->incomingPeerID;
+                event.outgoingId = enetEvent.peer->outgoingPeerID;
                 event.ip = convertAddress(enetEvent.peer->address);
                 event.port = enetEvent.peer->address.port;
         }
