@@ -3,6 +3,8 @@
 
 #include "Host.hpp"
 
+enet_uint32 getPacketFlags(const PacketType& type);
+
 /**
  * The server implementation.
  */
@@ -11,10 +13,12 @@ public:
         /**
          * Send string data to all connected ENetPeers.
          */
-        void sendToAll(const std::string& data) const
+        void sendToAll(const std::string& data, const PacketType& type) const
         {
+                enet_uint32 flags = getPacketFlags(type);
+
                 ENetPacket* packet = enet_packet_create(data.c_str(),
-                                data.length() + 1, ENET_PACKET_FLAG_RELIABLE);
+                                data.length() + 1, flags);
 
                 enet_host_broadcast(host, 0, packet);
         }
@@ -54,10 +58,12 @@ public:
          *
          * @return true if successful, false otherwise
          */
-        bool send(const std::string& data) const
+        bool send(const std::string& data, const PacketType& type) const
         {
+                enet_uint32 flags = getPacketFlags(type);
+
                 ENetPacket* packet = enet_packet_create(data.c_str(),
-                                data.length() + 1, ENET_PACKET_FLAG_RELIABLE);
+                                data.length() + 1, flags);
 
                 if (enet_peer_send(server, 0, packet) != 0) {
                         /* Packet could not be sent */
@@ -79,5 +85,23 @@ public:
                 enet_host_flush(host);
         }
 };
+
+enet_uint32 getPacketFlags(const PacketType& type)
+{
+        /* Default to unreliable */
+        enet_uint32 flags = 0;
+
+        switch (type) {
+                case PacketType::Unreliable:
+                        flags = 0;
+                        break;
+
+                case PacketType::Reliable:
+                        flags = ENET_PACKET_FLAG_RELIABLE;
+                        break;
+        }
+
+        return flags;
+}
 
 #endif /* _NETWORK_HPP */

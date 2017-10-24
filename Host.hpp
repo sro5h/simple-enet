@@ -10,6 +10,14 @@
 std::string convertAddress(const ENetAddress& address);
 
 /**
+ * All possible packet types.
+ */
+enum class PacketType {
+        Unreliable,
+        Reliable
+};
+
+/**
  * All possible event types.
  */
 enum class EventType {

@@ -34,7 +34,7 @@ int main(int argc, char** argv)
                                 } else if (event.type == EventType::Received) {
                                         std::cout << "Received[id=" << event.incomingId <<
                                                 "]: " << event.data << std::endl;
-                                        server.sendToAll("pong");
+                                        server.sendToAll("pong", PacketType::Reliable);
 
                                 } else if (event.type == EventType::Disconnected) {
                                         std::cout << "Client[id=" << event.incomingId <<
@@ -66,7 +66,7 @@ int main(int argc, char** argv)
                                 if (event.type == EventType::Connected) {
                                         std::cout << "Connected to the server[id=" <<
                                                 event.incomingId << "]." << std::endl;
-                                        client.send("ping");
+                                        client.send("ping", PacketType::Reliable);
 
                                 } else if (event.type == EventType::Received) {
                                         std::cout << "Received[id=" << event.incomingId <<
