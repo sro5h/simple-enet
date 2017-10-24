@@ -1,5 +1,5 @@
-#ifndef NETWORK_HPP
-#define NETWORK_HPP
+#ifndef _NETWORK_HPP
+#define _NETWORK_HPP
 
 #include "Host.hpp"
 
@@ -80,4 +80,4 @@ public:
         }
 };
 
-#endif /* Header guards */
+#endif /* _NETWORK_HPP */

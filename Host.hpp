@@ -1,5 +1,5 @@
-#ifndef HOST_HPP
-#define HOST_HPP
+#ifndef _HOST_HPP
+#define _HOST_HPP
 
 #include <enet/enet.h>
 #include <sstream>
@@ -154,4 +154,4 @@ std::string convertAddress(const ENetAddress& address)
         return str;
 }
 
-#endif /* Header guard */
+#endif /* _HOST_HPP */
