@@ -44,12 +44,7 @@ protected:
         void onConnect(const ENetEvent& enetEvent, Event& event)
         {
                 event.type = EventType::Connected;
-
-                /* Store the connectID in ENetPeer::data */
-                connectIds.push_back(enetEvent.peer->connectID);
-                enetEvent.peer->data = &connectIds.back();
-                event.peerId = connectIds.back();
-
+                event.peerId = enetEvent.peer->incomingPeerID;
                 event.ip = convertAddress(enetEvent.peer->address);
                 event.port = enetEvent.peer->address.port;
         }
@@ -61,7 +56,9 @@ protected:
         void onReceive(const ENetEvent& enetEvent, Event& event)
         {
                 event.type = EventType::Received;
-                event.peerId = *(int*) enetEvent.peer->data;
+                event.peerId = enetEvent.peer->incomingPeerID;
+                event.ip = convertAddress(enetEvent.peer->address);
+                event.port = enetEvent.peer->address.port;
 
                 /* Convert the sent data to a std::string */
                 std::stringstream tmp;
@@ -78,11 +75,9 @@ protected:
         void onDisconnect(const ENetEvent& enetEvent, Event& event)
         {
                 event.type = EventType::Disconnected;
-                unsigned int connectId = *(int*) enetEvent.peer->data;
-                event.peerId = connectId;
-
-                /* TODO: Free data if the peer disconnects */
-                connectIds.remove(connectId);
+                event.peerId = enetEvent.peer->incomingPeerID;
+                event.ip = convertAddress(enetEvent.peer->address);
+                event.port = enetEvent.peer->address.port;
         }
 
 public:

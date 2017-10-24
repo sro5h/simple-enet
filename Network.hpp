@@ -74,7 +74,8 @@ public:
          */
         bool disconnect()
         {
-                enet_peer_disconnect(server, server->connectID);
+                /* TODO: Indicate that this isn't a timeout */
+                enet_peer_disconnect(server, 0);
                 enet_host_flush(host);
         }
 };
