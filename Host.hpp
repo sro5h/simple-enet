@@ -41,7 +41,7 @@ protected:
          * Gets called after an ENetPeer connects or a connection attempt was
          * successful.
          */
-        void onConnect(const ENetEvent& enetEvent, Event& event)
+        void onConnect(const ENetEvent& enetEvent, Event& event) const
         {
                 event.type = EventType::Connected;
                 event.peerId = enetEvent.peer->incomingPeerID;
@@ -53,7 +53,7 @@ protected:
          * Gets called if an ENetPacket is received and converts the data to a
          * std::string.
          */
-        void onReceive(const ENetEvent& enetEvent, Event& event)
+        void onReceive(const ENetEvent& enetEvent, Event& event) const
         {
                 event.type = EventType::Received;
                 event.peerId = enetEvent.peer->incomingPeerID;
@@ -72,7 +72,7 @@ protected:
          * Gets called after an ENetPeer disconnects or a disconnection attempt
          * was successful.
          */
-        void onDisconnect(const ENetEvent& enetEvent, Event& event)
+        void onDisconnect(const ENetEvent& enetEvent, Event& event) const
         {
                 event.type = EventType::Disconnected;
                 event.peerId = enetEvent.peer->incomingPeerID;
@@ -117,7 +117,7 @@ public:
          *
          * @return false if no ENetEvents was availlable, true otherwise
          */
-        bool pollEvent(Event& event)
+        bool pollEvent(Event& event) const
         {
                 ENetEvent enetEvent;
 

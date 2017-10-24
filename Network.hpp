@@ -11,7 +11,7 @@ public:
         /**
          * Send string data to all connected ENetPeers.
          */
-        void sendToAll(const std::string& data)
+        void sendToAll(const std::string& data) const
         {
                 ENetPacket* packet = enet_packet_create(data.c_str(),
                                 data.length() + 1, ENET_PACKET_FLAG_RELIABLE);
@@ -54,7 +54,7 @@ public:
          *
          * @return true if successful, false otherwise
          */
-        bool send(const std::string& data)
+        bool send(const std::string& data) const
         {
                 ENetPacket* packet = enet_packet_create(data.c_str(),
                                 data.length() + 1, ENET_PACKET_FLAG_RELIABLE);
@@ -72,7 +72,7 @@ public:
          *
          * @return true if successful, false otherwise
          */
-        bool disconnect()
+        bool disconnect() const
         {
                 /* TODO: Indicate that this isn't a timeout */
                 enet_peer_disconnect(server, 0);
