@@ -75,6 +75,11 @@ bool Host::pollEvent(Event& event) const
         return false;
 }
 
+std::size_t Host::getConnectedPeerCount() const
+{
+        return (mHost) ? mHost->connectedPeers : 0;
+}
+
 void Host::broadcast(const sf::Packet& packet)
 {
         if (mHost)

@@ -14,6 +14,7 @@ public:
 
         bool create(const std::string& address, sf::Uint16 port, std::size_t maxPeers);
         bool pollEvent(Event& event) const;
+        std::size_t getConnectedPeerCount() const;
 
         void broadcast(const sf::Packet& packet);
 
