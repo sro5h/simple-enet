@@ -15,11 +15,14 @@ int main(int argc, char** argv)
                 return EXIT_FAILURE;
         }
 
-        char mode;
-        std::cout << "[S]erver or [C]lient? " << std::flush;
-        std::cin >> mode;
+        if (argc != 2) {
+                std::cout << "Usage: " << argv[0] << " [c,s]" << std::endl;
+                return EXIT_FAILURE;
+        }
 
-        if (mode == 's')
+        std::string mode(argv[1]);
+
+        if (mode == "s")
         {
                 Host host;
 
