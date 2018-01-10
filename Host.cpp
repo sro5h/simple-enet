@@ -51,23 +51,7 @@ bool Host::pollEvent(Event& event) const
 
         if (enet_host_service(mHost, &enetEvent, 0) > 0)
         {
-                switch (enetEvent.type)
-                {
-                        case ENET_EVENT_TYPE_CONNECT:
-                        {
-                                convertConnect(enetEvent, event);
-                        } break;
-
-                        case ENET_EVENT_TYPE_DISCONNECT:
-                        {
-                                convertDisconnect(enetEvent, event);
-                        } break;
-
-                        case ENET_EVENT_TYPE_RECEIVE:
-                        {
-                                convertReceive(enetEvent, event);
-                        } break;
-                }
+                toEvent(event, enetEvent);
 
                 return true;
         }

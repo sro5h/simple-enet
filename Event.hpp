@@ -21,8 +21,6 @@ struct Event
         sf::Uint16 port;
 };
 
-void convertConnect(const ENetEvent& enetEvent, Event& event);
-void convertDisconnect(const ENetEvent& enetEvent, Event& event);
-void convertReceive(const ENetEvent& enetEvent, Event& event);
+void toEvent(Event& event, const ENetEvent& enetEvent);
 
 #endif // _EVENT_HPP_

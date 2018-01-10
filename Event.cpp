@@ -2,9 +2,33 @@
 
 #include <enet/enet.h>
 
+void convertConnect(Event& event, const ENetEvent& enetEvent);
+void convertDisconnect(Event& event, const ENetEvent& enetEvent);
+void convertReceive(Event& event, const ENetEvent& enetEvent);
 std::string convertAddress(const ENetAddress& address);
 
-void convertConnect(const ENetEvent& enetEvent, Event& event)
+void toEvent(Event& event, const ENetEvent& enetEvent)
+{
+        switch (enetEvent.type)
+        {
+                case ENET_EVENT_TYPE_CONNECT:
+                {
+                        convertConnect(event, enetEvent);
+                } break;
+
+                case ENET_EVENT_TYPE_DISCONNECT:
+                {
+                        convertDisconnect(event, enetEvent);
+                } break;
+
+                case ENET_EVENT_TYPE_RECEIVE:
+                {
+                        convertReceive(event, enetEvent);
+                } break;
+        }
+}
+
+void convertConnect(Event& event, const ENetEvent& enetEvent)
 {
         event.type = Event::Type::Connect;
         event.incomingId = enetEvent.peer->incomingPeerID;
@@ -13,7 +37,7 @@ void convertConnect(const ENetEvent& enetEvent, Event& event)
         event.port = enetEvent.peer->address.port;
 }
 
-void convertDisconnect(const ENetEvent& enetEvent, Event& event)
+void convertDisconnect(Event& event, const ENetEvent& enetEvent)
 {
         event.type = Event::Type::Disconnect;
         event.incomingId = enetEvent.peer->incomingPeerID;
@@ -22,7 +46,7 @@ void convertDisconnect(const ENetEvent& enetEvent, Event& event)
         event.port = enetEvent.peer->address.port;
 }
 
-void convertReceive(const ENetEvent& enetEvent, Event& event)
+void convertReceive(Event& event, const ENetEvent& enetEvent)
 {
         event.type = Event::Type::Receive;
         event.incomingId = enetEvent.peer->incomingPeerID;
