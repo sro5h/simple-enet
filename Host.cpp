@@ -55,17 +55,17 @@ bool Host::pollEvent(Event& event) const
                 {
                         case ENET_EVENT_TYPE_CONNECT:
                         {
-                                onConnect(enetEvent, event);
+                                convertConnect(enetEvent, event);
                         } break;
 
                         case ENET_EVENT_TYPE_DISCONNECT:
                         {
-                                onDisconnect(enetEvent, event);
+                                convertDisconnect(enetEvent, event);
                         } break;
 
                         case ENET_EVENT_TYPE_RECEIVE:
                         {
-                                onReceive(enetEvent, event);
+                                convertReceive(enetEvent, event);
                         } break;
                 }
 
@@ -89,36 +89,4 @@ void Host::broadcast(const sf::Packet& packet)
 
                 enet_host_broadcast(mHost, 0, enetPacket);
         }
-}
-
-void Host::onConnect(const ENetEvent& enetEvent, Event& event) const
-{
-        event.type = Event::Type::Connect;
-        event.incomingId = enetEvent.peer->incomingPeerID;
-        event.outgoingId = enetEvent.peer->outgoingPeerID;
-        // TODO: convert ip
-        event.port = enetEvent.peer->address.port;
-}
-
-void Host::onDisconnect(const ENetEvent& enetEvent, Event& event) const
-{
-        event.type = Event::Type::Disconnect;
-        event.incomingId = enetEvent.peer->incomingPeerID;
-        event.outgoingId = enetEvent.peer->outgoingPeerID;
-        // TODO: convert ip
-        event.port = enetEvent.peer->address.port;
-}
-
-void Host::onReceive(const ENetEvent& enetEvent, Event& event) const
-{
-        event.type = Event::Type::Receive;
-        event.incomingId = enetEvent.peer->incomingPeerID;
-        event.outgoingId = enetEvent.peer->outgoingPeerID;
-        // TODO: convert ip
-        event.port = enetEvent.peer->address.port;
-
-        // Copy byte data to Event::packet
-        event.packet.append((void*)enetEvent.packet->data, enetEvent.packet->dataLength);
-
-        enet_packet_destroy(enetEvent.packet);
 }

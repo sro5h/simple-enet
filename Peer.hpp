@@ -5,7 +5,6 @@
 
 typedef struct _ENetHost ENetHost;
 typedef struct _ENetPeer ENetPeer;
-typedef struct _ENetEvent ENetEvent;
 
 class Peer final
 {

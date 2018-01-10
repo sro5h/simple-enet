@@ -4,7 +4,6 @@
 #include "Event.hpp"
 
 typedef struct _ENetHost ENetHost;
-typedef struct _ENetEvent ENetEvent;
 
 class Host final
 {
