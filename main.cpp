@@ -51,9 +51,12 @@ int main(int argc, char** argv)
                                 }
                                 else if (event.type == Event::Type::Receive)
                                 {
+                                        std::string msg;
+                                        event.packet >> msg;
+
                                         std::cout << "Received[id="
-                                                << event.incomingId << "]"
-                                                << std::endl;
+                                                << event.incomingId << "]: "
+                                                << msg << std::endl;
                                 }
                         }
                 }
@@ -87,6 +90,10 @@ int main(int argc, char** argv)
                                         std::cout << "Connected[id="
                                                 << event.incomingId << "]"
                                                 << std::endl;
+
+                                        sf::Packet packet;
+                                        packet << "ping";
+                                        peer.send(packet);
                                 }
                                 else if (event.type == Event::Type::Disconnect)
                                 {
