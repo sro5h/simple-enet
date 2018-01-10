@@ -1,11 +1,11 @@
 CXX = g++
 RM = rm
 CXXFLAGS = -I.
-LDFLAGS = -lenet
+LDFLAGS = -lenet -lsfml-system -lsfml-network
 
 PROJECT = app
-PROJECT_HEADERS = Host.hpp
-PROJECT_SOURCES = main.cpp
+PROJECT_HEADERS = Event.hpp Host.hpp Peer.hpp
+PROJECT_SOURCES = main.cpp Host.cpp Peer.cpp
 PROJECT_OBJECTS = $(subst .cpp,.o,$(PROJECT_SOURCES))
 
 all: $(PROJECT)

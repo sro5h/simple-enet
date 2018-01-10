@@ -1,92 +1,109 @@
+#include "Host.hpp"
+#include "Peer.hpp"
+
+#include <enet/enet.h>
+
 #include <iostream>
-#include "Network.hpp"
 
 #define PORT 42323
 
 int main(int argc, char** argv)
 {
         if (enet_initialize() != 0)
-                std::cerr << "Could not initialize enet." << std::endl;
+        {
+                std::cout << "Could not initialize enet." << std::endl;
+                return EXIT_FAILURE;
+        }
 
         char mode;
-        std::cout << "Server(s) or Client(c)? " << std::flush;
+        std::cout << "[S]erver or [C]lient? " << std::flush;
         std::cin >> mode;
 
-        if (mode == 's') {
-                Server server;
+        if (mode == 's')
+        {
+                Host host;
 
-                if (!server.create(PORT, 32)) {
-                        std::cerr << "Could not create the host." << std::endl;
-                        return 1;
+                if (!host.create(PORT, 5))
+                {
+                        std::cout << "Could not create host." << std::endl;
+                        return EXIT_FAILURE;
                 }
 
                 std::cout << "Host created." << std::endl;
 
-                while (true) {
+                while (true)
+                {
                         Event event;
-
-                        while (server.pollEvent(event)) {
-                                if (event.type == EventType::Connected) {
-                                        std::cout << "New client[id=" << event.incomingId <<
-                                                "] connected from [" << event.ip <<
-                                                ":" << event.port << "]." <<  std::endl;
-
-                                } else if (event.type == EventType::Received) {
-                                        std::cout << "Received[id=" << event.incomingId <<
-                                                "]: " << event.data << std::endl;
-                                        server.sendToAll("pong", PacketType::Reliable);
-
-                                } else if (event.type == EventType::Disconnected) {
-                                        std::cout << "Client[id=" << event.incomingId <<
-                                                "] disconnected." << std::endl;
+                        while (host.pollEvent(event))
+                        {
+                                if (event.type == Event::Type::Connect)
+                                {
+                                        std::cout << "New peer[id="
+                                                << event.incomingId << "]"
+                                                << std::endl;
+                                }
+                                else if (event.type == Event::Type::Disconnect)
+                                {
+                                        std::cout << "Peer[id="
+                                                << event.incomingId
+                                                << "] disconnected"
+                                                << std::endl;
+                                }
+                                else if (event.type == Event::Type::Receive)
+                                {
+                                        std::cout << "Received[id="
+                                                << event.incomingId << "]"
+                                                << std::endl;
                                 }
                         }
                 }
-        } else {
-                Client client;
-                bool connected = true;
-                int i = 0;
+        }
+        else
+        {
+                Peer peer;
 
-                if (!client.create(PORT_ANY, 1)) {
-                        std::cerr << "Could not create the host." << std::endl;
-                        return 1;
+                if (!peer.create())
+                {
+                        std::cout << "Could not create peer." << std::endl;
+                        return EXIT_FAILURE;
                 }
 
-                std::cout << "Host created." << std::endl;
+                std::cout << "Peer created." << std::endl;
 
-                /* Try to connect to the server */
-                if (!client.connect("localhost", PORT)) {
-                        std::cerr << "Could not connect to the server." << std::endl;
+                // Try to connect to the host
+                if (!peer.connect("localhost", PORT))
+                {
+                        std::cout << "Could not connect to the server." << std::endl;
+                        return EXIT_FAILURE;
                 }
 
-                while (connected) {
+                while (true)
+                {
                         Event event;
-
-                        while (client.pollEvent(event)) {
-                                if (event.type == EventType::Connected) {
-                                        std::cout << "Connected to the server[id=" <<
-                                                event.incomingId << "]." << std::endl;
-                                        client.send("ping", PacketType::Reliable);
-
-                                } else if (event.type == EventType::Received) {
-                                        std::cout << "Received[id=" << event.incomingId <<
-                                                "]: " << event.data << std::endl;
-
-                                } else if (event.type == EventType::Disconnected) {
-                                        std::cout << "Disconnected from the server[id=" <<
-                                                event.incomingId << "]." << std::endl;
-                                        connected = false;
+                        while (peer.pollEvent(event))
+                        {
+                                if (event.type == Event::Type::Connect)
+                                {
+                                        std::cout << "Connected[id="
+                                                << event.incomingId << "]"
+                                                << std::endl;
+                                }
+                                else if (event.type == Event::Type::Disconnect)
+                                {
+                                        std::cout << "Disconnected[id="
+                                                << event.incomingId << "]"
+                                                << std::endl;
+                                }
+                                else if (event.type == Event::Type::Receive)
+                                {
+                                        std::cout << "Received[id="
+                                                << event.incomingId << "]"
+                                                << std::endl;
                                 }
                         }
-
-                        if (i > 10000000) {
-                                client.disconnect();
-                        }
-
-                        ++i;
                 }
         }
 
         enet_deinitialize();
-        return 0;
+        return EXIT_SUCCESS;
 }

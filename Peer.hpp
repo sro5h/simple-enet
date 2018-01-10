@@ -1,21 +1,23 @@
-#ifndef _HOST_HPP_
-#define _HOST_HPP_
+#ifndef _PEER_HPP_
+#define _PEER_HPP_
 
 #include "Event.hpp"
 
 typedef struct _ENetHost ENetHost;
+typedef struct _ENetPeer ENetPeer;
 typedef struct _ENetEvent ENetEvent;
 
-class Host final
+class Peer final
 {
 public:
-        explicit Host();
-        ~Host();
+        explicit Peer();
+        ~Peer();
 
-        bool create(sf::Uint16 port, std::size_t connections);
+        bool create();
+        bool connect(const std::string& ip, sf::Uint16 port);
         bool pollEvent(Event& event) const;
 
-        void broadcast(const sf::Packet& packet);
+        void send(const sf::Packet& packet);
 
 private:
         void onConnect(const ENetEvent& enetEvent, Event& event) const;
@@ -24,6 +26,7 @@ private:
 
 private:
         ENetHost* mHost;
+        ENetPeer* mRemoteHost;
 };
 
-#endif // _HOST_HPP_
+#endif // _PEER_HPP_
