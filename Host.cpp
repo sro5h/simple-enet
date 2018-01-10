@@ -24,7 +24,18 @@ bool Host::create(const std::string& address, sf::Uint16 port, std::size_t maxPe
         }
 
         ENetAddress enetAddress;
-        enet_address_set_host(&enetAddress, address.c_str());
+        if (address.empty())
+        {
+                enetAddress.host = ENET_HOST_ANY;
+        }
+        else
+        {
+                if (enet_address_set_host(&enetAddress, address.c_str()) != 0)
+                {
+                        // Address could not be set
+                        return false;
+                }
+        }
         enetAddress.port = port;
 
         mHost = enet_host_create(&enetAddress, maxPeers, 2, 0, 0);
@@ -34,6 +45,8 @@ bool Host::create(const std::string& address, sf::Uint16 port, std::size_t maxPe
 
 bool Host::pollEvent(Event& event) const
 {
+        if (!mHost) return false;
+
         ENetEvent enetEvent;
 
         if (enet_host_service(mHost, &enetEvent, 0) > 0)
@@ -64,10 +77,13 @@ bool Host::pollEvent(Event& event) const
 
 void Host::broadcast(const sf::Packet& packet)
 {
-        ENetPacket* enetPacket = enet_packet_create(packet.getData(),
-                        packet.getDataSize(), 0);
+        if (mHost)
+        {
+                ENetPacket* enetPacket = enet_packet_create(packet.getData(),
+                                packet.getDataSize(), 0);
 
-        enet_host_broadcast(mHost, 0, enetPacket);
+                enet_host_broadcast(mHost, 0, enetPacket);
+        }
 }
 
 void Host::onConnect(const ENetEvent& enetEvent, Event& event) const

@@ -24,6 +24,12 @@ Peer::~Peer()
 
 bool Peer::create()
 {
+        if (mHost)
+        {
+                // The host already exists
+                return false;
+        }
+
         mHost = enet_host_create(nullptr, 1, 2, 0, 0);
 
         return mHost != nullptr;
@@ -31,8 +37,21 @@ bool Peer::create()
 
 bool Peer::connect(const std::string& address, sf::Uint16 port)
 {
+        if (!mHost) return false;
+
         ENetAddress enetAddress;
-        enet_address_set_host(&enetAddress, address.c_str());
+        if (address.empty())
+        {
+                enetAddress.host = ENET_HOST_ANY;
+        }
+        else
+        {
+                if (enet_address_set_host(&enetAddress, address.c_str()) != 0)
+                {
+                        // Address could not be set
+                        return false;
+                }
+        }
         enetAddress.port = port;
 
         mRemoteHost = enet_host_connect(mHost, &enetAddress, 2, 0);
@@ -42,6 +61,8 @@ bool Peer::connect(const std::string& address, sf::Uint16 port)
 
 bool Peer::pollEvent(Event& event) const
 {
+        if (!mHost) return false;
+
         ENetEvent enetEvent;
 
         if (enet_host_service(mHost, &enetEvent, 0) > 0)
@@ -72,10 +93,13 @@ bool Peer::pollEvent(Event& event) const
 
 void Peer::send(const sf::Packet& packet)
 {
-        ENetPacket* enetPacket = enet_packet_create(packet.getData(),
-                        packet.getDataSize(), 0);
+        if (mHost)
+        {
+                ENetPacket* enetPacket = enet_packet_create(packet.getData(),
+                                packet.getDataSize(), 0);
 
-        enet_peer_send(mRemoteHost, 0, enetPacket);
+                enet_peer_send(mRemoteHost, 0, enetPacket);
+        }
 }
 
 void Peer::onConnect(const ENetEvent& enetEvent, Event& event) const
