@@ -29,13 +29,13 @@ bool Peer::create()
         return mHost != nullptr;
 }
 
-bool Peer::connect(const std::string& ip, sf::Uint16 port)
+bool Peer::connect(const std::string& address, sf::Uint16 port)
 {
-        ENetAddress address;
-        enet_address_set_host(&address, ip.c_str());
-        address.port = port;
+        ENetAddress enetAddress;
+        enet_address_set_host(&enetAddress, address.c_str());
+        enetAddress.port = port;
 
-        mRemoteHost = enet_host_connect(mHost, &address, 2, 0);
+        mRemoteHost = enet_host_connect(mHost, &enetAddress, 2, 0);
 
         return mRemoteHost != nullptr;
 }

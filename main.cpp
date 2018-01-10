@@ -26,7 +26,7 @@ int main(int argc, char** argv)
         {
                 Host host;
 
-                if (!host.create(PORT, 5))
+                if (!host.create("localhost", PORT, 5))
                 {
                         std::cout << "Could not create host." << std::endl;
                         return EXIT_FAILURE;

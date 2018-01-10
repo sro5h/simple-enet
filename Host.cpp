@@ -15,13 +15,19 @@ Host::~Host()
         }
 }
 
-bool Host::create(sf::Uint16 port, std::size_t connections)
+bool Host::create(const std::string& address, sf::Uint16 port, std::size_t maxPeers)
 {
-        ENetAddress address;
-        address.host = ENET_HOST_ANY;
-        address.port = port;
+        if (mHost)
+        {
+                // The host already exists
+                return false;
+        }
 
-        mHost = enet_host_create(&address, connections, 2, 0, 0);
+        ENetAddress enetAddress;
+        enet_address_set_host(&enetAddress, address.c_str());
+        enetAddress.port = port;
+
+        mHost = enet_host_create(&enetAddress, maxPeers, 2, 0, 0);
 
         return mHost != nullptr;
 }
