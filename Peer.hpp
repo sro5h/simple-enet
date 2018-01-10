@@ -2,6 +2,7 @@
 #define _PEER_HPP_
 
 #include "Event.hpp"
+#include "Packet.hpp"
 
 typedef struct _ENetHost ENetHost;
 typedef struct _ENetPeer ENetPeer;
@@ -16,7 +17,7 @@ public:
         bool connect(const std::string& ip, sf::Uint16 port);
         bool pollEvent(Event& event) const;
 
-        void send(const sf::Packet& packet);
+        void send(const sf::Packet& packet, Packet::Flag flag);
 
 private:
         void onConnect(const ENetEvent& enetEvent, Event& event) const;

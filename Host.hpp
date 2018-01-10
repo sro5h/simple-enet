@@ -2,6 +2,7 @@
 #define _HOST_HPP_
 
 #include "Event.hpp"
+#include "Packet.hpp"
 
 typedef struct _ENetHost ENetHost;
 
@@ -15,7 +16,7 @@ public:
         bool pollEvent(Event& event) const;
         std::size_t getConnectedPeerCount() const;
 
-        void broadcast(const sf::Packet& packet);
+        void broadcast(const sf::Packet& packet, Packet::Flag flag);
 
 private:
         void onConnect(const ENetEvent& enetEvent, Event& event) const;

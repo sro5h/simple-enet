@@ -80,12 +80,11 @@ std::size_t Host::getConnectedPeerCount() const
         return (mHost) ? mHost->connectedPeers : 0;
 }
 
-void Host::broadcast(const sf::Packet& packet)
+void Host::broadcast(const sf::Packet& packet, Packet::Flag flag)
 {
         if (mHost)
         {
-                ENetPacket* enetPacket = enet_packet_create(packet.getData(),
-                                packet.getDataSize(), 0);
+                ENetPacket* enetPacket = toENetPacket(packet, flag);
 
                 enet_host_broadcast(mHost, 0, enetPacket);
         }

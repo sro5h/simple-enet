@@ -91,12 +91,11 @@ bool Peer::pollEvent(Event& event) const
         return false;
 }
 
-void Peer::send(const sf::Packet& packet)
+void Peer::send(const sf::Packet& packet, Packet::Flag flag)
 {
         if (mHost)
         {
-                ENetPacket* enetPacket = enet_packet_create(packet.getData(),
-                                packet.getDataSize(), 0);
+                ENetPacket* enetPacket = toENetPacket(packet, flag);
 
                 enet_peer_send(mRemoteHost, 0, enetPacket);
         }

@@ -96,7 +96,7 @@ int main(int argc, char** argv)
 
                                         sf::Packet packet;
                                         packet << "ping";
-                                        peer.send(packet);
+                                        peer.send(packet, Packet::Flag::Reliable);
                                 }
                                 else if (event.type == Event::Type::Disconnect)
                                 {

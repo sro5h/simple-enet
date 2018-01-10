@@ -4,8 +4,8 @@ CXXFLAGS = -I.
 LDFLAGS = -lenet -lsfml-system -lsfml-network
 
 PROJECT = app
-PROJECT_HEADERS = Event.hpp Host.hpp Peer.hpp
-PROJECT_SOURCES = main.cpp Event.cpp Host.cpp Peer.cpp
+PROJECT_HEADERS = Event.hpp Packet.hpp Host.hpp Peer.hpp
+PROJECT_SOURCES = main.cpp Event.cpp Packet.cpp Host.cpp Peer.cpp
 PROJECT_OBJECTS = $(subst .cpp,.o,$(PROJECT_SOURCES))
 
 all: $(PROJECT)
