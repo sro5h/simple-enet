@@ -25,6 +25,11 @@ void toEvent(Event& event, const ENetEvent& enetEvent)
                 {
                         convertReceive(event, enetEvent);
                 } break;
+
+                default:
+                {
+                        // TODO: log error message, maybe add Type None
+                } break;
         }
 }
 
