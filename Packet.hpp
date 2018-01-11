@@ -18,7 +18,7 @@ typedef std::uint32_t Uint32;
 class Packet
 {
 public:
-        enum class Flag : Uint32;
+        enum class Flag : Uint16;
 
 public:
         Packet();
@@ -59,7 +59,7 @@ public:
         Packet& operator<<(const std::string& data);
 
 public:
-        enum class Flag : Uint32
+        enum class Flag : Uint16
         {
                 Reliable,
                 Unreliable,

@@ -7,7 +7,7 @@ typedef struct _ENetEvent ENetEvent;
 
 struct Event
 {
-        enum class Type : Uint32
+        enum class Type : Uint16
         {
                 Connect,
                 Disconnect,
