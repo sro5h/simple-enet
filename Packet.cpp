@@ -4,13 +4,6 @@
 
 #include <cstring>
 
-Packet::Packet()
-        : mReadPos(0)
-        , mIsValid(true)
-        , flag(Flag::Unreliable)
-{
-}
-
 Packet::Packet(Flag flag)
         : mReadPos(0)
         , mIsValid(true)

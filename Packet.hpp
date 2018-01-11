@@ -21,8 +21,7 @@ public:
         enum class Flag : Uint16;
 
 public:
-        Packet();
-        Packet(Flag flag);
+        Packet(Flag flag = Flag::Unreliable);
         ~Packet();
 
         void append(const void* data, std::size_t size);
