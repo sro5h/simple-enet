@@ -5,9 +5,9 @@
 #include <cstring>
 
 Packet::Packet(Flag flag)
-        : mReadPos(0)
+        : flag(flag)
+        , mReadPos(0)
         , mIsValid(true)
-        , flag(flag)
 {
 }
 
