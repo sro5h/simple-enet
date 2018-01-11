@@ -2,6 +2,8 @@
 
 #include <enet/enet.h>
 
+#include <cassert>
+
 void convertConnect(Event& event, const ENetEvent& enetEvent);
 void convertDisconnect(Event& event, const ENetEvent& enetEvent);
 void convertReceive(Event& event, const ENetEvent& enetEvent);
@@ -9,6 +11,8 @@ std::string convertAddress(const ENetAddress& address);
 
 void toEvent(Event& event, const ENetEvent& enetEvent)
 {
+        assert(enetEvent.type != ENET_EVENT_TYPE_NONE);
+
         switch (enetEvent.type)
         {
                 case ENET_EVENT_TYPE_CONNECT:

@@ -2,6 +2,8 @@
 
 #include <enet/enet.h>
 
+#include <cassert>
+
 Peer::Peer()
         : mHost(nullptr)
         , mRemoteHost(nullptr)
@@ -24,11 +26,7 @@ Peer::~Peer()
 
 bool Peer::create()
 {
-        if (mHost)
-        {
-                // The host already exists
-                return false;
-        }
+        assert(mHost == nullptr);
 
         mHost = enet_host_create(nullptr, 1, 2, 0, 0);
 
@@ -37,7 +35,7 @@ bool Peer::create()
 
 bool Peer::connect(const std::string& address, Uint16 port)
 {
-        if (!mHost) return false;
+        assert(mHost);
 
         ENetAddress enetAddress;
         if (address.empty())
@@ -61,7 +59,7 @@ bool Peer::connect(const std::string& address, Uint16 port)
 
 bool Peer::pollEvent(Event& event) const
 {
-        if (!mHost) return false;
+        assert(mHost);
 
         ENetEvent enetEvent;
 
@@ -77,10 +75,9 @@ bool Peer::pollEvent(Event& event) const
 
 void Peer::send(const Packet& packet)
 {
-        if (mHost)
-        {
-                ENetPacket* enetPacket = toENetPacket(packet);
+        assert(mHost);
 
-                enet_peer_send(mRemoteHost, 0, enetPacket);
-        }
+        ENetPacket* enetPacket = toENetPacket(packet);
+
+        enet_peer_send(mRemoteHost, 0, enetPacket);
 }

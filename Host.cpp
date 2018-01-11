@@ -2,6 +2,8 @@
 
 #include <enet/enet.h>
 
+#include <cassert>
+
 Host::Host()
         : mHost(nullptr)
 {
@@ -17,11 +19,7 @@ Host::~Host()
 
 bool Host::create(const std::string& address, Uint16 port, std::size_t maxPeers)
 {
-        if (mHost)
-        {
-                // The host already exists
-                return false;
-        }
+        assert(mHost == nullptr);
 
         ENetAddress enetAddress;
         if (address.empty())
@@ -45,7 +43,7 @@ bool Host::create(const std::string& address, Uint16 port, std::size_t maxPeers)
 
 bool Host::pollEvent(Event& event) const
 {
-        if (!mHost) return false;
+        assert(mHost);
 
         ENetEvent enetEvent;
 
@@ -66,10 +64,9 @@ std::size_t Host::getConnectedPeerCount() const
 
 void Host::broadcast(const Packet& packet)
 {
-        if (mHost)
-        {
-                ENetPacket* enetPacket = toENetPacket(packet);
+        assert(mHost);
 
-                enet_host_broadcast(mHost, 0, enetPacket);
-        }
+        ENetPacket* enetPacket = toENetPacket(packet);
+
+        enet_host_broadcast(mHost, 0, enetPacket);
 }
