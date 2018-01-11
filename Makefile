@@ -1,6 +1,6 @@
 CXX = g++
 RM = rm
-CXXFLAGS = -I.
+CXXFLAGS = -I. -Wall -Wextra -std=c++14
 LDFLAGS = -lenet
 
 PROJECT = app
