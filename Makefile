@@ -1,7 +1,7 @@
 CXX = g++
 RM = rm
 CXXFLAGS = -I.
-LDFLAGS = -lenet -lsfml-system -lsfml-network
+LDFLAGS = -lenet
 
 PROJECT = app
 PROJECT_HEADERS = Event.hpp Packet.hpp Host.hpp Peer.hpp

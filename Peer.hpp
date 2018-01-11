@@ -14,10 +14,10 @@ public:
         ~Peer();
 
         bool create();
-        bool connect(const std::string& ip, sf::Uint16 port);
+        bool connect(const std::string& ip, Uint16 port);
         bool pollEvent(Event& event) const;
 
-        void send(const sf::Packet& packet, Packet::Flag flag);
+        void send(const Packet& packet);
 
 private:
         void onConnect(const ENetEvent& enetEvent, Event& event) const;

@@ -94,9 +94,9 @@ int main(int argc, char** argv)
                                                 << event.incomingId << "]"
                                                 << std::endl;
 
-                                        sf::Packet packet;
+                                        Packet packet(Packet::Flag::Reliable);
                                         packet << "ping";
-                                        peer.send(packet, Packet::Flag::Reliable);
+                                        peer.send(packet);
                                 }
                                 else if (event.type == Event::Type::Disconnect)
                                 {

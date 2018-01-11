@@ -35,7 +35,7 @@ bool Peer::create()
         return mHost != nullptr;
 }
 
-bool Peer::connect(const std::string& address, sf::Uint16 port)
+bool Peer::connect(const std::string& address, Uint16 port)
 {
         if (!mHost) return false;
 
@@ -75,11 +75,11 @@ bool Peer::pollEvent(Event& event) const
         return false;
 }
 
-void Peer::send(const sf::Packet& packet, Packet::Flag flag)
+void Peer::send(const Packet& packet)
 {
         if (mHost)
         {
-                ENetPacket* enetPacket = toENetPacket(packet, flag);
+                ENetPacket* enetPacket = toENetPacket(packet);
 
                 enet_peer_send(mRemoteHost, 0, enetPacket);
         }

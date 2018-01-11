@@ -15,7 +15,7 @@ Host::~Host()
         }
 }
 
-bool Host::create(const std::string& address, sf::Uint16 port, std::size_t maxPeers)
+bool Host::create(const std::string& address, Uint16 port, std::size_t maxPeers)
 {
         if (mHost)
         {
@@ -64,11 +64,11 @@ std::size_t Host::getConnectedPeerCount() const
         return (mHost) ? mHost->connectedPeers : 0;
 }
 
-void Host::broadcast(const sf::Packet& packet, Packet::Flag flag)
+void Host::broadcast(const Packet& packet)
 {
         if (mHost)
         {
-                ENetPacket* enetPacket = toENetPacket(packet, flag);
+                ENetPacket* enetPacket = toENetPacket(packet);
 
                 enet_host_broadcast(mHost, 0, enetPacket);
         }
