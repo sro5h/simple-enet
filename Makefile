@@ -4,8 +4,8 @@ CXXFLAGS = -I. -Wall -Wextra -std=c++14
 LDFLAGS = -lenet
 
 PROJECT = app
-PROJECT_HEADERS = Event.hpp Packet.hpp Host.hpp Peer.hpp
-PROJECT_SOURCES = main.cpp Event.cpp Packet.cpp Host.cpp Peer.cpp
+PROJECT_HEADERS = Event.hpp Packet.hpp Host.hpp Peer.hpp RemotePeer.hpp
+PROJECT_SOURCES = main.cpp Event.cpp Packet.cpp Host.cpp Peer.cpp RemotePeer.cpp
 PROJECT_OBJECTS = $(subst .cpp,.o,$(PROJECT_SOURCES))
 
 all: $(PROJECT)

@@ -42,13 +42,13 @@ int main(int argc, char** argv)
                                 if (event.type == Event::Type::Connect)
                                 {
                                         std::cout << "New peer[id="
-                                                << event.incomingId << "]"
+                                                << event.peer.id << "]"
                                                 << std::endl;
                                 }
                                 else if (event.type == Event::Type::Disconnect)
                                 {
                                         std::cout << "Peer[id="
-                                                << event.incomingId
+                                                << event.peer.id
                                                 << "] disconnected"
                                                 << std::endl;
                                 }
@@ -58,7 +58,7 @@ int main(int argc, char** argv)
                                         event.packet >> msg;
 
                                         std::cout << "Received[id="
-                                                << event.incomingId << "]: "
+                                                << event.peer.id << "]: "
                                                 << msg << std::endl;
                                 }
                         }
@@ -91,7 +91,7 @@ int main(int argc, char** argv)
                                 if (event.type == Event::Type::Connect)
                                 {
                                         std::cout << "Connected[id="
-                                                << event.incomingId << "]"
+                                                << event.peer.id << "]"
                                                 << std::endl;
 
                                         Packet packet(Packet::Flag::Reliable);
@@ -101,13 +101,13 @@ int main(int argc, char** argv)
                                 else if (event.type == Event::Type::Disconnect)
                                 {
                                         std::cout << "Disconnected[id="
-                                                << event.incomingId << "]"
+                                                << event.peer.id << "]"
                                                 << std::endl;
                                 }
                                 else if (event.type == Event::Type::Receive)
                                 {
                                         std::cout << "Received[id="
-                                                << event.incomingId << "]"
+                                                << event.peer.id << "]"
                                                 << std::endl;
                                 }
                         }

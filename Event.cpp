@@ -7,6 +7,7 @@
 void convertConnect(Event& event, const ENetEvent& enetEvent);
 void convertDisconnect(Event& event, const ENetEvent& enetEvent);
 void convertReceive(Event& event, const ENetEvent& enetEvent);
+
 std::string convertAddress(const ENetAddress& address);
 
 void toEvent(Event& event, const ENetEvent& enetEvent)
@@ -40,28 +41,25 @@ void toEvent(Event& event, const ENetEvent& enetEvent)
 void convertConnect(Event& event, const ENetEvent& enetEvent)
 {
         event.type = Event::Type::Connect;
-        event.incomingId = enetEvent.peer->incomingPeerID;
-        event.outgoingId = enetEvent.peer->outgoingPeerID;
-        event.address = convertAddress(enetEvent.peer->address);
-        event.port = enetEvent.peer->address.port;
+        event.peer.id = enetEvent.peer->incomingPeerID;
+        event.peer.address = convertAddress(enetEvent.peer->address);
+        event.peer.port = enetEvent.peer->address.port;
 }
 
 void convertDisconnect(Event& event, const ENetEvent& enetEvent)
 {
         event.type = Event::Type::Disconnect;
-        event.incomingId = enetEvent.peer->incomingPeerID;
-        event.outgoingId = enetEvent.peer->outgoingPeerID;
-        event.address = convertAddress(enetEvent.peer->address);
-        event.port = enetEvent.peer->address.port;
+        event.peer.id = enetEvent.peer->incomingPeerID;
+        event.peer.address = convertAddress(enetEvent.peer->address);
+        event.peer.port = enetEvent.peer->address.port;
 }
 
 void convertReceive(Event& event, const ENetEvent& enetEvent)
 {
         event.type = Event::Type::Receive;
-        event.incomingId = enetEvent.peer->incomingPeerID;
-        event.outgoingId = enetEvent.peer->outgoingPeerID;
-        event.address = convertAddress(enetEvent.peer->address);
-        event.port = enetEvent.peer->address.port;
+        event.peer.id = enetEvent.peer->incomingPeerID;
+        event.peer.address = convertAddress(enetEvent.peer->address);
+        event.peer.port = enetEvent.peer->address.port;
 
         // Copy byte data to Event::packet
         event.packet.append((void*)enetEvent.packet->data, enetEvent.packet->dataLength);

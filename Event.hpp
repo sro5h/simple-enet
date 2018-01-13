@@ -2,6 +2,7 @@
 #define _EVENT_HPP_
 
 #include "Packet.hpp"
+#include "RemotePeer.hpp"
 
 typedef struct _ENetEvent ENetEvent;
 
@@ -14,11 +15,8 @@ struct Event final
                 Receive,
         } type;
 
-        Uint16 incomingId;
-        Uint16 outgoingId;
+        RemotePeer peer;
         Packet packet;
-        std::string address;
-        Uint16 port;
 };
 
 void toEvent(Event& event, const ENetEvent& enetEvent);
