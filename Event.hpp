@@ -14,8 +14,8 @@ struct Event
                 Receive,
         } type;
 
-        Uint32 incomingId;
-        Uint32 outgoingId;
+        Uint16 incomingId;
+        Uint16 outgoingId;
         Packet packet;
         std::string address;
         Uint16 port;
