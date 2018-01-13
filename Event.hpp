@@ -4,8 +4,6 @@
 #include "Packet.hpp"
 #include "RemotePeer.hpp"
 
-typedef struct _ENetEvent ENetEvent;
-
 struct Event final
 {
         enum class Type : Uint16

@@ -1,12 +1,9 @@
 #ifndef _REMOTE_PEER_HPP_
 #define _REMOTE_PEER_HPP_
 
-#include "Packet.hpp"
+#include "Types.hpp"
 
-typedef struct _ENetPeer ENetPeer;
-typedef struct _ENetEvent ENetEvent;
-
-struct Event;
+#include <string>
 
 struct RemotePeer final
 {

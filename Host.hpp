@@ -2,9 +2,6 @@
 #define _HOST_HPP_
 
 #include "Event.hpp"
-#include "Packet.hpp"
-
-typedef struct _ENetHost ENetHost;
 
 class Host final
 {

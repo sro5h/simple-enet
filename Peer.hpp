@@ -2,10 +2,6 @@
 #define _PEER_HPP_
 
 #include "Event.hpp"
-#include "Packet.hpp"
-
-typedef struct _ENetHost ENetHost;
-typedef struct _ENetPeer ENetPeer;
 
 class Peer final
 {
