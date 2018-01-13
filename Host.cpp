@@ -70,3 +70,12 @@ void Host::broadcast(const Packet& packet)
 
         enet_host_broadcast(mHost, 0, enetPacket);
 }
+
+void Host::send(const RemotePeer& peer, const Packet& packet)
+{
+        assert(mHost);
+
+        ENetPacket* enetPacket = toENetPacket(packet);
+
+        enet_peer_send(peer.peer, 0, enetPacket);
+}

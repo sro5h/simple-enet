@@ -44,6 +44,11 @@ int main(int argc, char** argv)
                                         std::cout << "New peer[id="
                                                 << event.peer.id << "]"
                                                 << std::endl;
+
+                                        Packet packet;
+                                        packet << "hello";
+
+                                        host.send(event.peer, packet);
                                 }
                                 else if (event.type == Event::Type::Disconnect)
                                 {
@@ -106,9 +111,12 @@ int main(int argc, char** argv)
                                 }
                                 else if (event.type == Event::Type::Receive)
                                 {
+                                        std::string msg;
+                                        event.packet >> msg;
+
                                         std::cout << "Received[id="
-                                                << event.peer.id << "]"
-                                                << std::endl;
+                                                << event.peer.id << "]: "
+                                                << msg << std::endl;
                                 }
                         }
                 }
