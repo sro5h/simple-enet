@@ -20,11 +20,6 @@ public:
         void send(const Packet& packet);
 
 private:
-        void onConnect(const ENetEvent& enetEvent, Event& event) const;
-        void onDisconnect(const ENetEvent& enetEvent, Event& event) const;
-        void onReceive(const ENetEvent& ENetEvent, Event& event) const;
-
-private:
         ENetHost* mHost;
         ENetPeer* mRemoteHost;
 };
