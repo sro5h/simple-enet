@@ -19,16 +19,19 @@ void toEvent(Event& event, const ENetEvent& enetEvent)
                 case ENET_EVENT_TYPE_CONNECT:
                 {
                         convertConnect(event, enetEvent);
+                        event.peer.peer = enetEvent.peer;
                 } break;
 
                 case ENET_EVENT_TYPE_DISCONNECT:
                 {
                         convertDisconnect(event, enetEvent);
+                        event.peer.peer = enetEvent.peer;
                 } break;
 
                 case ENET_EVENT_TYPE_RECEIVE:
                 {
                         convertReceive(event, enetEvent);
+                        event.peer.peer = enetEvent.peer;
                 } break;
 
                 default:

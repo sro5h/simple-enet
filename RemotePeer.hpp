@@ -4,6 +4,9 @@
 #include "Packet.hpp"
 
 typedef struct _ENetPeer ENetPeer;
+typedef struct _ENetEvent ENetEvent;
+
+struct Event;
 
 struct RemotePeer final
 {
@@ -14,6 +17,13 @@ public:
         std::string address;
         Uint16 port;
         Uint16 id;
+
+private:
+        ENetPeer* peer;
+
+        friend class Host;
+        friend class Peer;
+        friend void toEvent(Event&, const ENetEvent&);
 };
 
 #endif // _REMOTE_PEER_HPP_
