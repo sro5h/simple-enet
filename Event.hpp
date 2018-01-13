@@ -5,7 +5,7 @@
 
 typedef struct _ENetEvent ENetEvent;
 
-struct Event
+struct Event final
 {
         enum class Type : Uint16
         {
