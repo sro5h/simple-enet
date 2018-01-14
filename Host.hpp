@@ -14,6 +14,7 @@ public:
         std::size_t getConnectedPeerCount() const;
 
         void broadcast(const Packet& packet);
+        void broadcastExcept(const RemotePeer& peer, const Packet& packet);
         void send(const RemotePeer& peer, const Packet& packet);
 
 private:

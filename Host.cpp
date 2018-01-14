@@ -71,6 +71,24 @@ void Host::broadcast(const Packet& packet)
         enet_host_broadcast(mHost, 0, enetPacket);
 }
 
+void Host::broadcastExcept(const RemotePeer& peer, const Packet& packet)
+{
+        assert(mHost);
+
+        ENetPacket* enetPacket = toENetPacket(packet);
+
+        for (std::size_t i = 0; i < mHost->peerCount; ++i)
+        {
+                if (mHost->peers[i].state != ENET_PEER_STATE_CONNECTED)
+                        continue;
+
+                if (mHost->peers[i].incomingPeerID != peer.id)
+                {
+                        enet_peer_send(&mHost->peers[i], 0, enetPacket);
+                }
+        }
+}
+
 void Host::send(const RemotePeer& peer, const Packet& packet)
 {
         assert(mHost);
