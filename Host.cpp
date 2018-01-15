@@ -62,6 +62,16 @@ void Host::disconnect(const RemotePeer& peer)
         enet_peer_disconnect(peer.peer, 0);
 }
 
+void Host::disconnectAll()
+{
+        assert(mHost);
+
+        for (std::size_t i = 0; i < mHost->peerCount; ++i)
+        {
+                enet_peer_disconnect(&mHost->peers[i], 0);
+        }
+}
+
 bool Host::pollEvent(Event& event) const
 {
         assert(mHost);

@@ -12,6 +12,7 @@ public:
         bool create(const std::string& address, const Uint16 port, const std::size_t maxPeers);
         void destroy();
         void disconnect(const RemotePeer& peer);
+        void disconnectAll();
         bool pollEvent(Event& event) const;
         std::size_t getConnectedPeerCount() const;
 
