@@ -10,7 +10,9 @@ public:
         ~Peer();
 
         bool create();
+        void close();
         bool connect(const std::string& ip, Uint16 port);
+        void disconnect();
         bool pollEvent(Event& event) const;
 
         void send(const Packet& packet);

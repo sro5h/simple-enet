@@ -12,16 +12,7 @@ Peer::Peer()
 
 Peer::~Peer()
 {
-        if (mHost)
-        {
-                if (mRemoteHost)
-                {
-                        enet_peer_disconnect(mRemoteHost, 0);
-                        enet_host_flush(mHost);
-                }
-
-                enet_host_destroy(mHost);
-        }
+        close();
 }
 
 bool Peer::create()
@@ -31,6 +22,19 @@ bool Peer::create()
         mHost = enet_host_create(nullptr, 1, 2, 0, 0);
 
         return mHost != nullptr;
+}
+
+void Peer::close()
+{
+        if (mHost)
+        {
+                if (mRemoteHost)
+                {
+                        enet_peer_disconnect_now(mRemoteHost, 0);
+                }
+
+                enet_host_destroy(mHost);
+        }
 }
 
 bool Peer::connect(const std::string& address, Uint16 port)
@@ -55,6 +59,14 @@ bool Peer::connect(const std::string& address, Uint16 port)
         mRemoteHost = enet_host_connect(mHost, &enetAddress, 2, 0);
 
         return mRemoteHost != nullptr;
+}
+
+void Peer::disconnect()
+{
+        assert(mHost);
+        assert(mRemoteHost);
+
+        enet_peer_disconnect(mRemoteHost, 0);
 }
 
 bool Peer::pollEvent(Event& event) const
