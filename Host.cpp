@@ -87,6 +87,11 @@ void Host::broadcastExcept(const RemotePeer& peer, const Packet& packet)
                         enet_peer_send(&mHost->peers[i], 0, enetPacket);
                 }
         }
+
+        if (enetPacket->referenceCount == 0)
+        {
+                enet_packet_destroy(enetPacket);
+        }
 }
 
 void Host::send(const RemotePeer& peer, const Packet& packet)
@@ -96,4 +101,9 @@ void Host::send(const RemotePeer& peer, const Packet& packet)
         ENetPacket* enetPacket = toENetPacket(packet);
 
         enet_peer_send(peer.peer, 0, enetPacket);
+
+        if (enetPacket->referenceCount == 0)
+        {
+                enet_packet_destroy(enetPacket);
+        }
 }

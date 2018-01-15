@@ -80,4 +80,9 @@ void Peer::send(const Packet& packet)
         ENetPacket* enetPacket = toENetPacket(packet);
 
         enet_peer_send(mRemoteHost, 0, enetPacket);
+
+        if (enetPacket->referenceCount == 0)
+        {
+                enet_packet_destroy(enetPacket);
+        }
 }
