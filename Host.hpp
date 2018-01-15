@@ -9,7 +9,7 @@ public:
         explicit Host();
         ~Host();
 
-        bool create(const std::string& address, Uint16 port, std::size_t maxPeers);
+        bool create(const std::string& address, const Uint16 port, const std::size_t maxPeers);
         void destroy();
         bool pollEvent(Event& event) const;
         std::size_t getConnectedPeerCount() const;
