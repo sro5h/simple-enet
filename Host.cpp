@@ -55,6 +55,13 @@ void Host::destroy()
         }
 }
 
+void Host::disconnect(const RemotePeer& peer)
+{
+        assert(mHost);
+
+        enet_peer_disconnect(peer.peer, 0);
+}
+
 bool Host::pollEvent(Event& event) const
 {
         assert(mHost);
