@@ -41,6 +41,20 @@ bool Host::create(const std::string& address, Uint16 port, std::size_t maxPeers)
         return mHost != nullptr;
 }
 
+void Host::destroy()
+{
+        if (mHost)
+        {
+                for (std::size_t i = 0; i < mHost->peerCount; ++i)
+                {
+                        enet_peer_disconnect_now(&mHost->peers[i], 0);
+                }
+
+                enet_host_destroy(mHost);
+                mHost = nullptr;
+        }
+}
+
 bool Host::pollEvent(Event& event) const
 {
         assert(mHost);
