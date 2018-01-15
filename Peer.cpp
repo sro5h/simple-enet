@@ -31,9 +31,11 @@ void Peer::close()
                 if (mRemoteHost)
                 {
                         enet_peer_disconnect_now(mRemoteHost, 0);
+                        mRemoteHost = nullptr;
                 }
 
                 enet_host_destroy(mHost);
+                mHost = nullptr;
         }
 }
 
