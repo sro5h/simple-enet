@@ -12,7 +12,7 @@ Peer::Peer()
 
 Peer::~Peer()
 {
-        close();
+        destroy();
 }
 
 bool Peer::create()
@@ -24,7 +24,7 @@ bool Peer::create()
         return mHost != nullptr;
 }
 
-void Peer::close()
+void Peer::destroy()
 {
         if (mHost)
         {
