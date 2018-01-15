@@ -11,10 +11,7 @@ Host::Host()
 
 Host::~Host()
 {
-        if (mHost)
-        {
-                enet_host_destroy(mHost);
-        }
+        destroy();
 }
 
 bool Host::create(const std::string& address, Uint16 port, std::size_t maxPeers)
