@@ -1,4 +1,4 @@
-#include "RemotePeer.hpp"
+#include "Peer.hpp"
 
 #include <enet/enet.h>
 

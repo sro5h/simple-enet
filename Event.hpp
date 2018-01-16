@@ -2,7 +2,7 @@
 #define _EVENT_HPP_
 
 #include "Packet.hpp"
-#include "RemotePeer.hpp"
+#include "Peer.hpp"
 
 struct Event final
 {
