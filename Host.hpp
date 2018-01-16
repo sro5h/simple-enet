@@ -1,5 +1,5 @@
-#ifndef _HOST_HPP_
-#define _HOST_HPP_
+#ifndef HOST_HPP
+#define HOST_HPP
 
 #include "Event.hpp"
 
@@ -25,4 +25,4 @@ private:
         ENetHost* mHost;
 };
 
-#endif // _HOST_HPP_
+#endif // HOST_HPP

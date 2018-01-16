@@ -1,5 +1,5 @@
-#ifndef _REMOTE_PEER_HPP_
-#define _REMOTE_PEER_HPP_
+#ifndef PEER_HPP
+#define PEER_HPP
 
 #include "Types.hpp"
 
@@ -25,4 +25,4 @@ private:
         friend void convertPeer(Peer&, const ENetPeer&);
 };
 
-#endif // _REMOTE_PEER_HPP_
+#endif // PEER_HPP
