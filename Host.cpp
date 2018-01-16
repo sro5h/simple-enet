@@ -76,7 +76,7 @@ bool Host::connect(const std::string& address, Uint16 port)
         return peer != nullptr;
 }
 
-void Host::disconnect(const RemotePeer& peer)
+void Host::disconnect(const Peer& peer)
 {
         assert(mHost);
 
@@ -123,7 +123,7 @@ void Host::broadcast(const Packet& packet)
         enet_host_broadcast(mHost, 0, enetPacket);
 }
 
-void Host::broadcastExcept(const RemotePeer& peer, const Packet& packet)
+void Host::broadcastExcept(const Peer& peer, const Packet& packet)
 {
         assert(mHost);
 
@@ -146,7 +146,7 @@ void Host::broadcastExcept(const RemotePeer& peer, const Packet& packet)
         }
 }
 
-void Host::send(const RemotePeer& peer, const Packet& packet)
+void Host::send(const Peer& peer, const Packet& packet)
 {
         assert(mHost);
 

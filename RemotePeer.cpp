@@ -2,12 +2,12 @@
 
 #include <enet/enet.h>
 
-RemotePeer::RemotePeer()
+Peer::Peer()
         : peer(nullptr)
 {
 }
 
-bool RemotePeer::operator==(const RemotePeer& other) const
+bool Peer::operator==(const Peer& other) const
 {
         return other.id == this->id;
 }

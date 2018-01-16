@@ -5,13 +5,13 @@
 
 #include <string>
 
-struct RemotePeer final
+struct Peer final
 {
 public:
-        explicit RemotePeer();
+        explicit Peer();
 
 public:
-        bool operator==(const RemotePeer& other) const;
+        bool operator==(const Peer& other) const;
 
 public:
         std::string address;
@@ -22,7 +22,7 @@ private:
         ENetPeer* peer;
 
         friend class Host;
-        friend void convertPeer(RemotePeer&, const ENetPeer&);
+        friend void convertPeer(Peer&, const ENetPeer&);
 };
 
 #endif // _REMOTE_PEER_HPP_

@@ -13,7 +13,7 @@ struct Event final
                 Receive,
         } type;
 
-        RemotePeer peer;
+        Peer peer;
         Packet packet;
 };
 

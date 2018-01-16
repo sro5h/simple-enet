@@ -4,7 +4,7 @@
 
 #include <cassert>
 
-void convertPeer(RemotePeer& peer, const ENetPeer& enetPeer);
+void convertPeer(Peer& peer, const ENetPeer& enetPeer);
 std::string convertAddress(const ENetAddress& address);
 
 void toEvent(Event& event, const ENetEvent& enetEvent)
@@ -42,7 +42,7 @@ void toEvent(Event& event, const ENetEvent& enetEvent)
         }
 }
 
-void convertPeer(RemotePeer& peer, const ENetPeer& enetPeer)
+void convertPeer(Peer& peer, const ENetPeer& enetPeer)
 {
         peer.id = enetPeer.incomingPeerID;
         peer.address = convertAddress(enetPeer.address);
