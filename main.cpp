@@ -1,11 +1,11 @@
 #include "Host.hpp"
-#include "Peer.hpp"
 
 #include <enet/enet.h>
 
 #include <iostream>
 
-#define PORT 42323
+#define SERVER_PORT 42323
+#define CLIENT_PORT 53434
 
 int main(int argc, char** argv)
 {
@@ -26,7 +26,7 @@ int main(int argc, char** argv)
         {
                 Host host;
 
-                if (!host.create("localhost", PORT, 5))
+                if (!host.create("localhost", SERVER_PORT, 5))
                 {
                         std::cout << "Could not create host." << std::endl;
                         return EXIT_FAILURE;
@@ -71,9 +71,9 @@ int main(int argc, char** argv)
         }
         else
         {
-                Peer peer;
+                Host host;
 
-                if (!peer.create())
+                if (!host.create("localhost", CLIENT_PORT, 1))
                 {
                         std::cout << "Could not create peer." << std::endl;
                         return EXIT_FAILURE;
@@ -82,7 +82,7 @@ int main(int argc, char** argv)
                 std::cout << "Peer created." << std::endl;
 
                 // Try to connect to the host
-                if (!peer.connect("localhost", PORT))
+                if (!host.connect("localhost", SERVER_PORT))
                 {
                         std::cout << "Could not connect to the server." << std::endl;
                         return EXIT_FAILURE;
@@ -91,7 +91,7 @@ int main(int argc, char** argv)
                 while (true)
                 {
                         Event event;
-                        while (peer.pollEvent(event))
+                        while (host.pollEvent(event))
                         {
                                 if (event.type == Event::Type::Connect)
                                 {
@@ -101,7 +101,7 @@ int main(int argc, char** argv)
 
                                         Packet packet(Packet::Flag::Reliable);
                                         packet << "ping";
-                                        peer.send(packet);
+                                        host.send(event.peer, packet);
                                 }
                                 else if (event.type == Event::Type::Disconnect)
                                 {

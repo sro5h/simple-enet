@@ -8,6 +8,9 @@
 struct RemotePeer final
 {
 public:
+        explicit RemotePeer();
+
+public:
         bool operator==(const RemotePeer& other) const;
 
 public:
@@ -19,8 +22,7 @@ private:
         ENetPeer* peer;
 
         friend class Host;
-        friend class Peer;
-        friend void toEvent(Event&, const ENetEvent&);
+        friend void convertPeer(RemotePeer&, const ENetPeer&);
 };
 
 #endif // _REMOTE_PEER_HPP_
