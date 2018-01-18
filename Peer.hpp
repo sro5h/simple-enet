@@ -22,7 +22,7 @@ private:
         ENetPeer* peer;
 
         friend class Host;
-        friend void convertPeer(Peer&, const ENetPeer&);
+        friend void toEvent(Event&, const ENetEvent&);
 };
 
 #endif // PEER_HPP
