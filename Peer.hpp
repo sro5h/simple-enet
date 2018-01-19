@@ -24,6 +24,13 @@ public:
          */
         bool operator==(const Peer& other) const;
 
+        /**
+         * Returns whether the Peer is in a valid state.
+         * This means the associated ENetPeer exists.
+         * @return True if the Peer is valid
+         */
+        explicit operator bool() const;
+
 public:
         std::string address;
         Uint16 port;
