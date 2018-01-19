@@ -5,12 +5,23 @@
 
 #include <string>
 
+/**
+ * Represents a connection with a Host.
+ */
 struct Peer final
 {
 public:
+        /**
+         * Initializes the Peer to an invalid state.
+         */
         explicit Peer();
 
 public:
+        /**
+         * Compares the Peer::id to test whether both Peers are the same.
+         * @param other The other Peer to compare this to
+         * @return True if both are the same
+         */
         bool operator==(const Peer& other) const;
 
 public:
