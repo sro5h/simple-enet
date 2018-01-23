@@ -35,6 +35,7 @@ public:
         std::string address;
         Uint16 port;
         Uint16 id;
+        Uint16 outgoingId;
 
 private:
         ENetPeer* peer;
