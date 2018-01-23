@@ -5,6 +5,20 @@
 
 #include <string>
 
+enum class State
+{
+        Zombie,
+        Disconnected,
+        Disconnecting,
+        AcknowlegdingDisconnect,
+        DisconnectLater,
+        Connected,
+        Connecting,
+        AcknowledgingConnect,
+        PendingConnect,
+        Succeeded,
+};
+
 /**
  * Represents a connection with a Host.
  */
@@ -15,6 +29,8 @@ public:
          * Initializes the Peer to an invalid state.
          */
         explicit Peer();
+
+        State getState();
 
 public:
         /**
