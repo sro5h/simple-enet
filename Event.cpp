@@ -1,7 +1,5 @@
 #include "Event.hpp"
-
 #include <enet/enet.h>
-
 #include <cassert>
 
 void convertPeer(Peer& peer, const ENetPeer& enetPeer);

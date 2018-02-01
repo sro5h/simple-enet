@@ -2,7 +2,6 @@
 #define PEER_HPP
 
 #include "Types.hpp"
-
 #include <string>
 
 enum class State

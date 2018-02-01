@@ -1,7 +1,6 @@
 #include "Host.hpp"
 
 #include <enet/enet.h>
-
 #include <iostream>
 
 #define SERVER_PORT 42323

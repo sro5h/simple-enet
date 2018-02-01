@@ -1,5 +1,4 @@
 #include "Peer.hpp"
-
 #include <enet/enet.h>
 
 Peer::Peer()
