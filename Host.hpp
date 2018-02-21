@@ -85,7 +85,7 @@ public:
          * @param peer The Peer to send the Packet to
          * @param packet The Packet to send
          */
-        void send(const Peer& peer, const Packet& packet);
+        bool send(const Peer& peer, const Packet& packet);
 
 private:
         ENetHost* mHost;

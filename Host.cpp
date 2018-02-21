@@ -145,17 +145,19 @@ void Host::broadcastExcept(const Peer& peer, const Packet& packet)
         }
 }
 
-void Host::send(const Peer& peer, const Packet& packet)
+bool Host::send(const Peer& peer, const Packet& packet)
 {
         assert(mHost);
         assert(peer.peer);
 
         ENetPacket* enetPacket = toENetPacket(packet);
 
-        enet_peer_send(peer.peer, 0, enetPacket);
+        int rc = enet_peer_send(peer.peer, 0, enetPacket);
 
         if (enetPacket->referenceCount == 0)
         {
                 enet_packet_destroy(enetPacket);
         }
+
+        return rc == 0;
 }
