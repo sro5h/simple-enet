@@ -40,6 +40,13 @@ public:
         bool operator==(const Peer& other) const;
 
         /**
+         * Compares the Peer::id to test whether the id of other is smaller.
+         * @param other The other Peer to compare this to
+         * @return True if this is smaller
+         */
+        bool operator<(const Peer& other) const;
+
+        /**
          * Returns whether the Peer is in a valid state.
          * This means the associated ENetPeer exists.
          * @return True if the Peer is valid
