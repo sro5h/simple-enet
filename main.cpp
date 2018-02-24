@@ -8,18 +8,25 @@
 
 int main(int argc, char** argv)
 {
+        Uint16 port = CLIENT_PORT;
+
         if (enet_initialize() != 0)
         {
                 std::cout << "Could not initialize enet." << std::endl;
                 return EXIT_FAILURE;
         }
 
-        if (argc != 2) {
+        if (argc < 2) {
                 std::cout << "Usage: " << argv[0] << " [c,s]" << std::endl;
                 return EXIT_FAILURE;
         }
 
         std::string mode(argv[1]);
+
+        if (argc == 3)
+        {
+                port = std::atoi(argv[2]);
+        }
 
         if (mode == "s")
         {
@@ -72,7 +79,7 @@ int main(int argc, char** argv)
         {
                 Host host;
 
-                if (!host.create("localhost", CLIENT_PORT, 1))
+                if (!host.create("localhost", port, 1))
                 {
                         std::cout << "Could not create peer." << std::endl;
                         return EXIT_FAILURE;
