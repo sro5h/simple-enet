@@ -6,6 +6,8 @@
 #define SERVER_PORT 42323
 #define CLIENT_PORT 53434
 
+void logEvent(const Event&);
+
 int main(int argc, char** argv)
 {
         Uint16 port = CLIENT_PORT;
@@ -45,12 +47,10 @@ int main(int argc, char** argv)
                         Event event;
                         while (host.pollEvent(event))
                         {
+                                logEvent(event);
+
                                 if (event.type == Event::Type::Connect)
                                 {
-                                        std::cout << "New peer[id="
-                                                << event.peer.id << "]"
-                                                << std::endl;
-
                                         Packet packet;
                                         packet << "hello";
 
@@ -58,19 +58,13 @@ int main(int argc, char** argv)
                                 }
                                 else if (event.type == Event::Type::Disconnect)
                                 {
-                                        std::cout << "Peer[id="
-                                                << event.peer.id
-                                                << "] disconnected"
-                                                << std::endl;
                                 }
                                 else if (event.type == Event::Type::Receive)
                                 {
                                         std::string msg;
                                         event.packet >> msg;
 
-                                        std::cout << "Received[id="
-                                                << event.peer.id << "]: "
-                                                << msg << std::endl;
+                                        std::cout << msg << std::endl;
                                 }
                         }
                 }
@@ -99,30 +93,23 @@ int main(int argc, char** argv)
                         Event event;
                         while (host.pollEvent(event))
                         {
+                                logEvent(event);
+
                                 if (event.type == Event::Type::Connect)
                                 {
-                                        std::cout << "Connected[id="
-                                                << event.peer.id << "]"
-                                                << std::endl;
-
                                         Packet packet(Packet::Flag::Reliable);
                                         packet << "ping";
                                         host.send(event.peer, packet);
                                 }
                                 else if (event.type == Event::Type::Disconnect)
                                 {
-                                        std::cout << "Disconnected[id="
-                                                << event.peer.id << "]"
-                                                << std::endl;
                                 }
                                 else if (event.type == Event::Type::Receive)
                                 {
                                         std::string msg;
                                         event.packet >> msg;
 
-                                        std::cout << "Received[id="
-                                                << event.peer.id << "]: "
-                                                << msg << std::endl;
+                                        std::cout << msg << std::endl;
                                 }
                         }
                 }
@@ -130,4 +117,25 @@ int main(int argc, char** argv)
 
         enet_deinitialize();
         return EXIT_SUCCESS;
+}
+
+void logEvent(const Event& event)
+{
+        if (event.type == Event::Type::Connect)
+        {
+                std::cout << "[connect] ";
+        }
+        else if (event.type == Event::Type::Disconnect)
+        {
+                std::cout << "[disconnect] ";
+        }
+        else if (event.type == Event::Type::Receive)
+        {
+                std::cout << "[receive] ";
+        }
+
+        std::cout << "peer (incomingId=" << event.peer.incomingId;
+        std::cout << ", outgoingId=" << event.peer.outgoingId;
+        std::cout << ", connectId=" << event.peer.connectId << ")";
+        std::cout << std::endl;
 }

@@ -42,8 +42,9 @@ void toEvent(Event& event, const ENetEvent& enetEvent)
 
 void convertPeer(Peer& peer, ENetPeer& enetPeer)
 {
-        peer.id = enetPeer.incomingPeerID;
+        peer.incomingId = enetPeer.incomingPeerID;
         peer.outgoingId = enetPeer.outgoingPeerID;
+        peer.connectId = enetPeer.connectID;
         peer.address = convertAddress(enetPeer.address);
         peer.port = enetPeer.address.port;
         peer.peer = &enetPeer;
