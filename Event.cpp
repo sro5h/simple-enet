@@ -2,7 +2,7 @@
 #include <enet/enet.h>
 #include <cassert>
 
-void convertPeer(Peer& peer, const ENetPeer& enetPeer);
+void convertPeer(Peer& peer, ENetPeer& enetPeer);
 std::string convertAddress(const ENetAddress& address);
 
 void toEvent(Event& event, const ENetEvent& enetEvent)
@@ -15,14 +15,12 @@ void toEvent(Event& event, const ENetEvent& enetEvent)
                 {
                         event.type = Event::Type::Connect;
                         convertPeer(event.peer, *enetEvent.peer);
-                        event.peer.peer = enetEvent.peer;
                 } break;
 
                 case ENET_EVENT_TYPE_DISCONNECT:
                 {
                         event.type = Event::Type::Disconnect;
                         convertPeer(event.peer, *enetEvent.peer);
-                        event.peer.peer = enetEvent.peer;
                 } break;
 
                 case ENET_EVENT_TYPE_RECEIVE:
@@ -31,7 +29,6 @@ void toEvent(Event& event, const ENetEvent& enetEvent)
                         event.packet.append((void*)enetEvent.packet->data,
                                         enetEvent.packet->dataLength);
                         convertPeer(event.peer, *enetEvent.peer);
-                        event.peer.peer = enetEvent.peer;
 
                         enet_packet_destroy(enetEvent.packet);
                 } break;
@@ -43,12 +40,13 @@ void toEvent(Event& event, const ENetEvent& enetEvent)
         }
 }
 
-void convertPeer(Peer& peer, const ENetPeer& enetPeer)
+void convertPeer(Peer& peer, ENetPeer& enetPeer)
 {
         peer.id = enetPeer.incomingPeerID;
         peer.outgoingId = enetPeer.outgoingPeerID;
         peer.address = convertAddress(enetPeer.address);
         peer.port = enetPeer.address.port;
+        peer.peer = &enetPeer;
 }
 
 std::string convertAddress(const ENetAddress& address)
