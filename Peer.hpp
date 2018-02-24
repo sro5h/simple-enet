@@ -33,7 +33,8 @@ public:
 
 public:
         /**
-         * Compares the Peer::id to test whether both Peers are the same.
+         * Compares the internal ENetPeer pointer to test whether both Peers
+         * are the same.
          * @param other The other Peer to compare this to
          * @return True if both are the same
          */

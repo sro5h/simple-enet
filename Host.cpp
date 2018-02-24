@@ -133,7 +133,7 @@ void Host::broadcastExcept(const Peer& peer, const Packet& packet)
                 if (mHost->peers[i].state != ENET_PEER_STATE_CONNECTED)
                         continue;
 
-                if (mHost->peers[i].incomingPeerID != peer.id)
+                if (&mHost->peers[i] != peer.peer)
                 {
                         enet_peer_send(&mHost->peers[i], 0, enetPacket);
                 }

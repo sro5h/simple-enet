@@ -54,7 +54,7 @@ bool Peer::operator==(const Peer& other) const
 {
         if (peer != nullptr && other.peer != nullptr)
         {
-                return other.id == id;
+                return peer == other.peer;
         }
 
         return false;
