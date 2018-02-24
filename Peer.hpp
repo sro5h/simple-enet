@@ -1,5 +1,5 @@
-#ifndef PEER_HPP
-#define PEER_HPP
+#ifndef PEER_HPP_INCLUDED
+#define PEER_HPP_INCLUDED
 
 #include "Types.hpp"
 #include <string>
@@ -61,4 +61,4 @@ private:
         friend void convertPeer(Peer&, ENetPeer&);
 };
 
-#endif // PEER_HPP
+#endif // PEER_HPP_INCLUDED

@@ -1,5 +1,5 @@
-#ifndef HOST_HPP
-#define HOST_HPP
+#ifndef HOST_HPP_INCLUDED
+#define HOST_HPP_INCLUDED
 
 #include "Event.hpp"
 
@@ -91,4 +91,4 @@ private:
         ENetHost* mHost;
 };
 
-#endif // HOST_HPP
+#endif // HOST_HPP_INCLUDED

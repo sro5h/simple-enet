@@ -1,5 +1,5 @@
-#ifndef EVENT_HPP
-#define EVENT_HPP
+#ifndef EVENT_HPP_INCLUDED
+#define EVENT_HPP_INCLUDED
 
 #include "Packet.hpp"
 #include "Peer.hpp"
@@ -30,4 +30,4 @@ struct Event final
  */
 void toEvent(Event& event, const ENetEvent& enetEvent);
 
-#endif // EVENT_HPP
+#endif // EVENT_HPP_INCLUDED

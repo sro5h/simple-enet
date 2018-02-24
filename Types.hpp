@@ -1,5 +1,5 @@
-#ifndef TYPES_HPP
-#define TYPES_HPP
+#ifndef TYPES_HPP_INCLUDED
+#define TYPES_HPP_INCLUDED
 
 #include <cstdint>
 
@@ -19,4 +19,4 @@ typedef std::uint16_t Uint16;
 typedef std::int32_t Int32;
 typedef std::uint32_t Uint32;
 
-#endif // TYPES_HPP
+#endif // TYPES_HPP_INCLUDED
