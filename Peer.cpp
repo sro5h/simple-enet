@@ -60,11 +60,6 @@ bool Peer::operator==(const Peer& other) const
         return false;
 }
 
-bool Peer::operator<(const Peer& other) const
-{
-        return id < other.id;
-}
-
 Peer::operator bool() const
 {
         return peer != nullptr;
