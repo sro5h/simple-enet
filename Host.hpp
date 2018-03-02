@@ -2,6 +2,7 @@
 #define HOST_HPP_INCLUDED
 
 #include "Event.hpp"
+#include <unordered_map>
 
 /**
  * Manages connections and sends Packets to connected Peers.
@@ -59,7 +60,7 @@ public:
          * @param event The Event
          * @return True if an Event was found
          */
-        bool pollEvent(Event& event) const;
+        bool pollEvent(Event& event);
 
         /**
          * Get the number of connected Peers.
@@ -88,7 +89,23 @@ public:
         bool send(const Peer& peer, const Packet& packet);
 
 private:
+        /**
+         * Converts an ENetEvent to an Event.
+         * @param enetEvent The ENetEvent to convert
+         * @param event The Event to store the data in
+         */
+        void convertENetEvent(const ENetEvent& enetEvent, Event& event);
+
+        /**
+         * Converts an ENetPeer to a Peer.
+         * @param enetPeer The ENetPeer to convert
+         * @param peer The Peer to store the data in
+         */
+        void convertENetPeer(ENetPeer& enetPeer, Peer& peer);
+
+private:
         ENetHost* mHost;
+        std::unordered_map<ENetPeer*, Uint16> mOutgoingIds;
 };
 
 #endif // HOST_HPP_INCLUDED

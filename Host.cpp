@@ -2,6 +2,8 @@
 #include <enet/enet.h>
 #include <cassert>
 
+std::string convertAddress(const ENetAddress& address);
+
 Host::Host()
         : mHost(nullptr)
 {
@@ -91,7 +93,7 @@ void Host::disconnectAll()
         }
 }
 
-bool Host::pollEvent(Event& event) const
+bool Host::pollEvent(Event& event)
 {
         assert(mHost);
 
@@ -99,7 +101,7 @@ bool Host::pollEvent(Event& event) const
 
         if (enet_host_service(mHost, &enetEvent, 0) > 0)
         {
-                toEvent(event, enetEvent);
+                convertENetEvent(enetEvent, event);
 
                 return true;
         }
@@ -160,4 +162,60 @@ bool Host::send(const Peer& peer, const Packet& packet)
         }
 
         return rc == 0;
+}
+
+void Host::convertENetEvent(const ENetEvent& enetEvent, Event& event)
+{
+        assert(enetEvent.type != ENET_EVENT_TYPE_NONE);
+
+        ENetPeer* enetPeer = enetEvent.peer;
+        convertENetPeer(*enetPeer, event.peer);
+
+        if (enetEvent.type == ENET_EVENT_TYPE_CONNECT)
+        {
+                event.type = Event::Type::Connect;
+
+                assert(mOutgoingIds.find(enetPeer) == mOutgoingIds.end());
+                mOutgoingIds[enetPeer] = event.peer.outgoingId;
+        }
+        else if (enetEvent.type == ENET_EVENT_TYPE_DISCONNECT)
+        {
+                event.type = Event::Type::Disconnect;
+
+                assert(mOutgoingIds.find(enetPeer) != mOutgoingIds.end());
+                event.peer.outgoingId = mOutgoingIds[enetPeer];
+                mOutgoingIds.erase(enetPeer);
+        }
+        else if (enetEvent.type == ENET_EVENT_TYPE_RECEIVE)
+        {
+                event.type = Event::Type::Receive;
+                event.packet.append((void*)enetEvent.packet->data,
+                                    enetEvent.packet->dataLength);
+
+                assert(mOutgoingIds.find(enetPeer) != mOutgoingIds.end());
+                enet_packet_destroy(enetEvent.packet);
+        }
+}
+
+void Host::convertENetPeer(ENetPeer& enetPeer, Peer& peer)
+{
+        peer.peer = &enetPeer;
+        peer.incomingId = enetPeer.incomingPeerID;
+        peer.outgoingId = enetPeer.outgoingPeerID;
+        peer.connectId = enetPeer.connectID;
+        peer.address = convertAddress(enetPeer.address);
+        peer.port = enetPeer.address.port;
+}
+
+std::string convertAddress(const ENetAddress& address)
+{
+        char buffer[64];
+        std::string str;
+
+        if (enet_address_get_host_ip(&address, buffer, sizeof(buffer)) == 0)
+        {
+                str = buffer;
+        }
+
+        return str;
 }
