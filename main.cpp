@@ -4,7 +4,7 @@
 #include <iostream>
 
 #define SERVER_PORT 42323
-#define CLIENT_PORT 53434
+#define CLIENT_PORT 0
 
 void logEvent(const Event&);
 
