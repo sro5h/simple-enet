@@ -89,6 +89,13 @@ public:
         bool send(const Peer& peer, const Packet& packet);
 
 private:
+        struct PeerData
+        {
+                Uint16 outgoingId;
+                Uint32 connectId;
+        };
+
+private:
         /**
          * Converts an ENetEvent to an Event.
          * @param enetEvent The ENetEvent to convert
@@ -105,7 +112,7 @@ private:
 
 private:
         ENetHost* mHost;
-        std::unordered_map<ENetPeer*, Uint16> mOutgoingIds;
+        std::unordered_map<ENetPeer*, PeerData> mPeerData;
 };
 
 #endif // HOST_HPP_INCLUDED

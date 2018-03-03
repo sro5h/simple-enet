@@ -175,16 +175,18 @@ void Host::convertENetEvent(const ENetEvent& enetEvent, Event& event)
         {
                 event.type = Event::Type::Connect;
 
-                assert(mOutgoingIds.find(enetPeer) == mOutgoingIds.end());
-                mOutgoingIds[enetPeer] = event.peer.outgoingId;
+                assert(mPeerData.find(enetPeer) == mPeerData.end());
+                mPeerData[enetPeer].outgoingId = event.peer.outgoingId;
+                mPeerData[enetPeer].connectId = event.peer.connectId;
         }
         else if (enetEvent.type == ENET_EVENT_TYPE_DISCONNECT)
         {
                 event.type = Event::Type::Disconnect;
 
-                assert(mOutgoingIds.find(enetPeer) != mOutgoingIds.end());
-                event.peer.outgoingId = mOutgoingIds[enetPeer];
-                mOutgoingIds.erase(enetPeer);
+                assert(mPeerData.find(enetPeer) != mPeerData.end());
+                event.peer.outgoingId = mPeerData[enetPeer].outgoingId;
+                event.peer.connectId = mPeerData[enetPeer].connectId;
+                mPeerData.erase(enetPeer);
         }
         else if (enetEvent.type == ENET_EVENT_TYPE_RECEIVE)
         {
@@ -192,7 +194,7 @@ void Host::convertENetEvent(const ENetEvent& enetEvent, Event& event)
                 event.packet.append((void*)enetEvent.packet->data,
                                     enetEvent.packet->dataLength);
 
-                assert(mOutgoingIds.find(enetPeer) != mOutgoingIds.end());
+                assert(mPeerData.find(enetPeer) != mPeerData.end());
                 enet_packet_destroy(enetEvent.packet);
         }
 }
