@@ -164,6 +164,11 @@ bool Host::send(const Peer& peer, const Packet& packet)
         return rc == 0;
 }
 
+Host::operator bool() const
+{
+        return mHost != nullptr;
+}
+
 void Host::convertENetEvent(const ENetEvent& enetEvent, Event& event)
 {
         assert(enetEvent.type != ENET_EVENT_TYPE_NONE);

@@ -88,6 +88,13 @@ public:
          */
         bool send(const Peer& peer, const Packet& packet);
 
+public:
+        /**
+         * Returns whether the Host is in a valid, initialized state.
+         * @return True if the Host is valid
+         */
+        explicit operator bool() const;
+
 private:
         struct PeerData
         {
