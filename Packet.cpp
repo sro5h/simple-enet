@@ -38,7 +38,7 @@ std::size_t Packet::getSize() const
 
 bool Packet::dataLeft() const
 {
-        return mReadPos >= mData.size();
+        return mReadPos <= mData.size();
 }
 
 Packet::operator bool() const
