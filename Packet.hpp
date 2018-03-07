@@ -39,7 +39,7 @@ public:
          * Returns the size of the data associated with the Packet.
          * @return The size of the data
          */
-        std::size_t getDataSize() const;
+        std::size_t getSize() const;
 
         /**
          * Returns whether there is data left to read.
