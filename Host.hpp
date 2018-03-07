@@ -63,6 +63,11 @@ public:
         bool pollEvent(Event& event);
 
         /**
+         * Sends any queued packets on the host to its connected peers.
+         */
+        void flush();
+
+        /**
          * Get the number of connected Peers.
          * @return The number of connected Peers
          */

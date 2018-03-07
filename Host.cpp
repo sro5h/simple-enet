@@ -109,6 +109,13 @@ bool Host::pollEvent(Event& event)
         return false;
 }
 
+void Host::flush()
+{
+        assert(mHost);
+
+        enet_host_flush(mHost);
+}
+
 std::size_t Host::getConnectionCount() const
 {
         return (mHost) ? mHost->connectedPeers : 0;
