@@ -1,5 +1,6 @@
 #include "Peer.hpp"
 #include <enet/enet.h>
+#include <functional>
 
 Peer::Peer()
         : peer(nullptr)
@@ -58,6 +59,11 @@ bool Peer::operator==(const Peer& other) const
         }
 
         return false;
+}
+
+bool Peer::operator<(const Peer& other) const
+{
+        return std::less<ENetPeer*>()(peer, other.peer);
 }
 
 Peer::operator bool() const
