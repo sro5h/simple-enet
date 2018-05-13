@@ -180,6 +180,7 @@ void Host::convertENetEvent(const ENetEvent& enetEvent, Event& event)
 {
         assert(enetEvent.type != ENET_EVENT_TYPE_NONE);
 
+        event = Event();
         ENetPeer* enetPeer = enetEvent.peer;
         convertENetPeer(*enetPeer, event.peer);
 
